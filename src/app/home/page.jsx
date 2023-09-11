@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import line from "@/assets/line.png";
 import { Button } from "@nextui-org/react";
+import { motion } from "framer-motion";
 
 const HomePage = () => {
   return (
@@ -11,7 +12,11 @@ const HomePage = () => {
       <main className="w-full h-screen bg-[#EEF8F0]">
         <div className="container mx-auto w-full h-full px-5 flex items-start justify-center flex-col">
           <div className="flex items-start flex-col gap-5">
-            <h1 className="text-[#182019] font-bold text-5xl z-[2]">
+            <motion.h1
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-[#182019] font-bold text-5xl z-[2]"
+            >
               Mantenga el{" "}
               <span className="relative text-green-500 overflow-hidden ">
                 {" "}
@@ -24,20 +29,30 @@ const HomePage = () => {
                 control total
               </span>{" "}
               de <br /> sus finanzas.
-            </h1>
+            </motion.h1>
 
-            <p className="text-[#70907A]">
+            <motion.p
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-[#70907A]"
+            >
               En poco tiempo, podrás personalizar tu presupuesto y <br />{" "}
               empezar a ver resultados inmediatos.
-            </p>
-            <div className="flex items-center justify-center gap-5">
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="flex items-center justify-center gap-5"
+            >
               <Button color="primary" radius="sm">
                 Empezár
               </Button>
               <Button color="primary" radius="sm" variant="bordered">
                 Cómo usar
               </Button>
-            </div>
+            </motion.div>
           </div>
         </div>
       </main>
