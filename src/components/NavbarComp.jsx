@@ -57,14 +57,14 @@ const NavbarComp = ({ path }) => {
           <Button
             as={NextLink}
             color="primary"
-            href="#"
             variant="light"
             radius="sm"
+            href="/auth/login"
           >
-            Log In
+            Iniciar sesion
           </Button>
-          <Button as={NextLink} color="primary" href="#" radius="sm">
-            Sign Up
+          <Button as={NextLink} color="primary" href="/auth/signup" radius="sm">
+            Registrate
           </Button>
         </NavbarContent>
       </Navbar>

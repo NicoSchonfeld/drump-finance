@@ -22,6 +22,7 @@ const HomePage = () => {
                 {" "}
                 <Image
                   src={line}
+                  alt={`image`}
                   width={300}
                   height={300}
                   className="absolute top-0 left-0 -z-[1]"
