@@ -8,10 +8,40 @@ import { Divider } from "@nextui-org/divider";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
+import { signUp } from "@/base/db/pocketbase";
 
 const SignUp = () => {
   const [isVisible, setIsVisible] = React.useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
+
+  const [userSignUpScheme, setUserSignUpScheme] = React.useState({
+    username: "",
+    email: "",
+    password: "",
+    passwordConfirm: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setUserSignUpScheme({ ...userSignUpScheme, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    signUp(userSignUpScheme).then((res) => {
+      alert("Usuario creado");
+      setUserSignUpScheme({
+        username: "",
+        email: "",
+        password: "",
+        passwordConfirm: "",
+      });
+      location.replace("/auth/login");
+      toggleVisibility();
+    });
+  };
 
   return (
     <section className="w-full h-screen bg-[#E5F1E8]">
@@ -23,12 +53,32 @@ const SignUp = () => {
             ipsum.
           </p>
 
-          <form className="flex items-center justify-center flex-col gap-5">
-            <Input type="text" label="Nombre de usuario" isRequired />
-            <Input type="email" label="Email" isRequired />
+          <form
+            className="flex items-center justify-center flex-col gap-5"
+            onSubmit={handleSubmit}
+          >
+            <Input
+              type="text"
+              label="Nombre de usuario"
+              isRequired
+              value={userSignUpScheme.username}
+              name="username"
+              onChange={handleChange}
+            />
+            <Input
+              type="email"
+              label="Email"
+              isRequired
+              value={userSignUpScheme.email}
+              name="email"
+              onChange={handleChange}
+            />
             <Input
               label="Contraseña"
               isRequired
+              value={userSignUpScheme.password}
+              name="password"
+              onChange={handleChange}
               endContent={
                 <button
                   className="focus:outline-none"
@@ -48,6 +98,9 @@ const SignUp = () => {
             <Input
               label="Repetir contraseña"
               isRequired
+              value={userSignUpScheme.passwordConfirm}
+              name="passwordConfirm"
+              onChange={handleChange}
               endContent={
                 <button
                   className="focus:outline-none"

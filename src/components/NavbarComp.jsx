@@ -8,8 +8,18 @@ import {
   NavbarItem,
   Link,
   Button,
+  Skeleton,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownSection,
+  DropdownItem,
 } from "@nextui-org/react";
 import NextLink from "next/link";
+import { getUser, isValid, logOut, pb } from "@/base/db/pocketbase";
+
+import avatar_1 from "@/assets/avatar_1.png";
+import Image from "next/image";
 
 const NavbarComp = ({ path }) => {
   const links = [
@@ -18,6 +28,17 @@ const NavbarComp = ({ path }) => {
     { id: "dashboard", Title: "Dashboard", path: "/dashboard" },
     { id: "contactanos", Title: "Contactános", path: "/contactus" },
   ];
+
+  const [userIsValid, setUserIsValid] = React.useState(false);
+  const [skeleton, setSkeleton] = React.useState(true);
+
+  React.useEffect(() => {
+    setUserIsValid(isValid);
+  }, [isValid]);
+
+  React.useEffect(() => {
+    setTimeout(() => setSkeleton(false), 1000);
+  }, []);
 
   return (
     <>
@@ -53,20 +74,88 @@ const NavbarComp = ({ path }) => {
           </NavbarContent>
         </NavbarBrand>
 
-        <NavbarContent className="hidden md:flex gap-4" justify="end">
-          <Button
-            as={NextLink}
-            color="primary"
-            variant="light"
-            radius="sm"
-            href="/auth/login"
+        {userIsValid ? (
+          <NavbarContent
+            className="hidden md:flex gap-4 items-center"
+            justify="end"
           >
-            Iniciar sesion
-          </Button>
-          <Button as={NextLink} color="primary" href="/auth/signup" radius="sm">
-            Registrate
-          </Button>
-        </NavbarContent>
+            <Dropdown>
+              <DropdownTrigger>
+                <Button variant="light" className="py-6">
+                  <div className="flex flex-col items-end justify-center">
+                    <p className="leading-3 font-bold">
+                      {pb?.authStore?.model?.username}
+                    </p>
+                    <p className="text-gray-500 text-sm">
+                      {pb?.authStore?.model?.email}
+                    </p>
+                  </div>
+                  <Image
+                    src={avatar_1}
+                    alt="avatar"
+                    width={40}
+                    height={40}
+                    className="rounded-full"
+                  />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Static Actions">
+                <DropdownItem key="profile">Perfil</DropdownItem>
+                <DropdownItem key="settings">Ajustes</DropdownItem>
+                <DropdownItem
+                  key="delete"
+                  className="text-danger"
+                  color="danger"
+                  onClick={() => logOut().then((res) => location.replace("/"))}
+                >
+                  Cerrar sesión
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </NavbarContent>
+        ) : (
+          <NavbarContent
+            className="hidden md:flex gap-4 items-center"
+            justify="end"
+          >
+            <div className="max-w-[200px] w-full flex flex-row-reverse items-center gap-3">
+              <div>
+                <Skeleton
+                  className={
+                    skeleton ? "flex rounded-full w-10 h-10" : "hidden"
+                  }
+                />
+              </div>
+              <div className="w-full flex flex-col items-end gap-2">
+                <Skeleton
+                  className={skeleton ? "h-3 w-3/5 rounded-lg" : "hidden"}
+                />
+                <Skeleton
+                  className={skeleton ? "h-3 w-4/5 rounded-lg" : "hidden"}
+                />
+              </div>
+            </div>
+            <Button
+              as={NextLink}
+              color="primary"
+              variant="light"
+              radius="sm"
+              href="/auth/login"
+              className={skeleton ? "hidden" : "visible"}
+            >
+              Iniciar sesion
+            </Button>
+            <Button
+              as={NextLink}
+              color="primary"
+              href="/auth/signup"
+              radius="sm"
+              className={skeleton ? "hidden" : "visible"}
+            >
+              Registrate
+            </Button>
+          </NavbarContent>
+        )}
       </Navbar>
     </>
   );
