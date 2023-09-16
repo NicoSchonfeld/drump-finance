@@ -26,27 +26,23 @@ import {
 } from "victory";
 import NextLink from "next/link";
 
-import { getUser } from "@/base/db/pocketbase";
+import { getUser, getTotalRevenue, pb } from "@/base/db/pocketbase";
+import { formatNumber } from "@/base/formatNumber";
 
 const Dashboard = () => {
-  /* const classNames = React.useMemo(
-    () => ({
-      wrapper: ["max-h-[382px]", "max-w-3xl"],
-      th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
-      td: [
-        // changing the rows border radius
-        // first
-        "group-data-[first=true]:first:before:rounded-none",
-        "group-data-[first=true]:last:before:rounded-none",
-        // middle
-        "group-data-[middle=true]:before:rounded-none",
-        // last
-        "group-data-[last=true]:first:before:rounded-none",
-        "group-data-[last=true]:last:before:rounded-none",
-      ],
-    }),
-    []
-  ); */
+  const [totalIngresos, setTotalIngresos] = React.useState(0);
+
+  React.useEffect(() => {
+    if (pb?.authStore?.isValid) {
+      getTotalRevenue().then((res) => {
+        if (res[0]) {
+          setTotalIngresos(res[0].total);
+        } else {
+          return;
+        }
+      });
+    }
+  }, []);
 
   return (
     <>
@@ -61,10 +57,12 @@ const Dashboard = () => {
                 <h3 className="font-bold text-xl text-[#EEF8F0]">
                   Total de ingresos
                 </h3>
-                <p className="font-bold text-4xl text-green-500">$90.000,00</p>
-                <p className="text-sm text-gray-500 text-center">
-                  Comparado a los $70.000,00 <br /> del mes pasado
+                <p className="font-bold text-3xl text-green-500">
+                  ${formatNumber(totalIngresos)}
                 </p>
+                {/* <p className="text-sm text-gray-500 text-center">
+                  Comparado a los $70.000,00 <br /> del mes pasado
+                </p> */}
               </div>
               <div className="flex flex-col md:flex-row items-center gap-3">
                 <Button color="primary" className="w-full" variant="bordered">
@@ -195,11 +193,11 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="bg-[#202b21] col-span-1 md:col-span-4 lg:col-span-6 shadow rounded px-5 py-10">
+          <div className="bg-[#202b21] col-span-1 md:col-span-4 lg:col-span-12 shadow rounded px-5 py-10">
             facturas
           </div>
 
-          <div className="bg-[#202b21] col-span-1 md:col-span-4 lg:col-span-6 shadow rounded px-5 py-10">
+          <div className="bg-[#202b21] col-span-1 md:col-span-4 lg:col-span-12 shadow rounded px-5 py-10">
             gastos
           </div>
 

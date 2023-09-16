@@ -78,6 +78,8 @@ export const totalRevenue = async () => {
       const resSave = await pb
         .collection("total_ingresos")
         .create(saveTotalRevenue);
+
+      return resSave;
     }
   } catch (error) {
     console.log(error);
@@ -118,6 +120,8 @@ export const editTotalRevenue = async () => {
       const resSave = await pb
         .collection("total_ingresos")
         .update(onlyTotalAuthUser[0].id, saveTotalRevenue);
+
+      return resSave;
     }
   } catch (error) {
     console.log(error);
@@ -136,13 +140,33 @@ export const addRevenue = async (ingresosScheme) => {
       });
 
       const onlyIngresosUserAuth = totalIngresos.filter(
-        (item) => (item.idUser = pb?.authStore?.model?.id)
+        (item) => item.idUser == pb?.authStore?.model?.id
       );
+
+      console.log(onlyIngresosUserAuth);
 
       if (onlyIngresosUserAuth.length <= 0) totalRevenue();
       if (onlyIngresosUserAuth.length > 0) editTotalRevenue();
 
       return resAddRevenue;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getTotalRevenue = async () => {
+  try {
+    if (pb?.authStore?.isValid) {
+      const records = await pb.collection("total_ingresos").getFullList({
+        sort: "-created",
+      });
+
+      const onlyTotalAuthUser = records.filter(
+        (item) => item.idUser == pb?.authStore?.model?.id
+      );
+
+      return onlyTotalAuthUser;
     }
   } catch (error) {
     console.log(error);

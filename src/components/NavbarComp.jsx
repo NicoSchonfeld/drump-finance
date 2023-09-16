@@ -157,7 +157,7 @@ const NavbarComp = ({ path }) => {
               variant="light"
               radius="sm"
               href="/auth/login"
-              className={skeleton ? "hidden" : "visible"}
+              className={skeleton ? "hidden" : "visible px-10"}
             >
               Iniciar sesion
             </Button>
@@ -166,7 +166,7 @@ const NavbarComp = ({ path }) => {
               color="primary"
               href="/auth/signup"
               radius="sm"
-              className={skeleton ? "hidden" : "visible"}
+              className={skeleton ? "hidden" : "visible px-10"}
             >
               Registrate
             </Button>
