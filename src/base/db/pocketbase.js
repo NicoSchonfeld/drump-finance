@@ -54,6 +54,64 @@ export const getUser = async () => {
   }
 };
 
+export const createMethod50_30_20 = async (totalAmount) => {
+  try {
+    if (pb?.authStore?.isValid) {
+      const total_50 = totalAmount * 0.5;
+      const total_30 = totalAmount * 0.3;
+      const total_20 = totalAmount * 0.2;
+
+      const data = {
+        total_50: total_50,
+        total_30: total_30,
+        total_20: total_20,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      const createTotal50_30_20 = await pb
+        .collection("metodo_50_30_20")
+        .create(data);
+
+      return createTotal50_30_20;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const editMethod50_30_20 = async (totalAmount) => {
+  try {
+    if (pb?.authStore?.isValid) {
+      const total_50 = totalAmount * 0.5;
+      const total_30 = totalAmount * 0.3;
+      const total_20 = totalAmount * 0.2;
+
+      const data = {
+        total_50: total_50,
+        total_30: total_30,
+        total_20: total_20,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      const allRecords = await pb.collection("metodo_50_30_20").getFullList({
+        sort: "-created",
+      });
+
+      const onlyRecosrsAuthUser = allRecords.filter(
+        (item) => item?.idUser == pb?.authStore?.model?.id
+      );
+
+      const totalEdit = await pb
+        .collection("metodo_50_30_20")
+        .update(onlyRecosrsAuthUser[0]?.id, data);
+
+      return totalEdit;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const totalRevenue = async () => {
   try {
     if (pb?.authStore?.isValid) {
@@ -78,6 +136,8 @@ export const totalRevenue = async () => {
       const resSave = await pb
         .collection("total_ingresos")
         .create(saveTotalRevenue);
+
+      createMethod50_30_20(totalAmount);
 
       return resSave;
     }
@@ -121,6 +181,8 @@ export const editTotalRevenue = async () => {
         .collection("total_ingresos")
         .update(onlyTotalAuthUser[0].id, saveTotalRevenue);
 
+      editMethod50_30_20(totalAmount);
+
       return resSave;
     }
   } catch (error) {
@@ -142,8 +204,6 @@ export const addRevenue = async (ingresosScheme) => {
       const onlyIngresosUserAuth = totalIngresos.filter(
         (item) => item.idUser == pb?.authStore?.model?.id
       );
-
-      console.log(onlyIngresosUserAuth);
 
       if (onlyIngresosUserAuth.length <= 0) totalRevenue();
       if (onlyIngresosUserAuth.length > 0) editTotalRevenue();
@@ -172,3 +232,23 @@ export const getTotalRevenue = async () => {
     console.log(error);
   }
 };
+
+export const getTotalMethod50_30_20 = async () => {
+  try {
+    if (pb?.authStore?.isValid) {
+      const records = await pb.collection("metodo_50_30_20").getFullList({
+        sort: "-created",
+      });
+
+      const onlyMethodsAuthUser = records.filter(
+        (item) => item?.idUser == pb?.authStore?.model?.id
+      );
+
+      return onlyMethodsAuthUser;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getTotalMethod50_30_20();

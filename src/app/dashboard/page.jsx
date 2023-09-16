@@ -33,17 +33,31 @@ import {
 } from "victory";
 import NextLink from "next/link";
 
-import { getUser, getTotalRevenue, pb, isValid } from "@/base/db/pocketbase";
+import {
+  getTotalMethod50_30_20,
+  getTotalRevenue,
+  pb,
+  isValid,
+} from "@/base/db/pocketbase";
 import { formatNumber } from "@/base/formatNumber";
 
 const Dashboard = () => {
   const [totalIngresos, setTotalIngresos] = React.useState(0);
+  const [method50_30_20, setMethod50_30_20] = React.useState();
 
   React.useEffect(() => {
     if (pb?.authStore?.isValid) {
       getTotalRevenue().then((res) => {
         if (res[0]) {
           setTotalIngresos(res[0].total);
+        } else {
+          return;
+        }
+      });
+
+      getTotalMethod50_30_20().then((res) => {
+        if (res[0]) {
+          setMethod50_30_20(res[0]);
         } else {
           return;
         }
@@ -57,24 +71,6 @@ const Dashboard = () => {
     setUserIsValid(isValid);
   }, [isValid]);
 
-  /*  <Skeleton
-                  className="rounded bg-[#678a69]"
-                  isLoaded={userIsValid}
-                >
-                  <p className="font-bold text-3xl text-green-500">
-                    ${formatNumber(totalIngresos)}
-                  </p>
-                </Skeleton> */
-
-  /* [#202b21] */
-
-  {
-    /* <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700 shadow-md shadow-green-500/50 p-2 text-white rounded flex items-center justify-center">
-                <FaMoneyBillWave className="text-3xl" />
-              </div> */
-  }
-
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   return (
     <>
       <section className="w-full h-auto bg-[#182019]">
@@ -89,7 +85,6 @@ const Dashboard = () => {
                   <FaMoneyBillWave className="text-3xl" />
                 </div>
               </Skeleton>
-
               <Skeleton className="rounded bg-[#678a69]" isLoaded={userIsValid}>
                 <h3 className="font-bold text-xl">Presupueto total</h3>
               </Skeleton>
@@ -109,12 +104,14 @@ const Dashboard = () => {
                       <FaMoneyBillWave className="text-xl" />
                     </div>
                     <Progress
-                      label="Necesidades"
+                      label={`Necesidades: $${method50_30_20?.total_50?.toFixed(
+                        2
+                      )}`}
                       size="sm"
-                      value={4000}
-                      maxValue={10000}
-                      color="warning"
-                      formatOptions={{ style: "currency", currency: "ARG" }}
+                      value={10}
+                      maxValue={method50_30_20?.total_50}
+                      color="primary"
+                      /* formatOptions={{ style: "currency", currency: "ARG" }} */
                       showValueLabel={true}
                       className="max-w-md"
                     />
@@ -130,12 +127,12 @@ const Dashboard = () => {
                       <FaMoneyBillWave className="text-xl" />
                     </div>
                     <Progress
-                      label="Necesidades"
+                      label={`Deseos: $${method50_30_20?.total_30?.toFixed(2)}`}
                       size="sm"
                       value={4000}
-                      maxValue={10000}
-                      color="warning"
-                      formatOptions={{ style: "currency", currency: "ARS" }}
+                      maxValue={method50_30_20?.total_30}
+                      color="primary"
+                      /* formatOptions={{ style: "currency", currency: "ARS" }} */
                       showValueLabel={true}
                       className="max-w-md"
                     />
@@ -151,19 +148,20 @@ const Dashboard = () => {
                       <FaMoneyBillWave className="text-xl" />
                     </div>
                     <Progress
-                      label="Necesidades"
+                      label={`Ahorros: $${method50_30_20?.total_20?.toFixed(
+                        2
+                      )}`}
                       size="sm"
                       value={4000}
-                      maxValue={10000}
-                      color="warning"
-                      formatOptions={{ style: "currency", currency: "ARS" }}
+                      maxValue={method50_30_20?.total_20}
+                      color="primary"
+                      /* formatOptions={{ style: "currency", currency: "ARS" }} */
                       showValueLabel={true}
                       className="max-w-md"
                     />
                   </div>
                 </Skeleton>
               </div>
-
               <div className="mt-5 w-full flex items-center gap-5">
                 <Skeleton
                   className="rounded bg-[#678a69] w-full"

@@ -1,6 +1,25 @@
 "use client";
-import React from "react";
-import { addRevenue, pb, getRevenueRealtime } from "@/base/db/pocketbase";
+import React, { useEffect, useState } from "react";
+import {
+  addRevenue,
+  pb,
+  getRevenueRealtime,
+  method50_30_20,
+} from "@/base/db/pocketbase";
+import {
+  Button,
+  Input,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Pagination,
+  ScrollShadow,
+} from "@nextui-org/react";
+import { formatNumber } from "@/base/formatNumber";
+import NextLink from "next/link";
 
 const AddRevenue = () => {
   const [ingresosScheme, setIngresosScheme] = React.useState({
@@ -9,6 +28,8 @@ const AddRevenue = () => {
     idUser: pb?.authStore?.model?.id,
   });
   const [tablaIngresos, setTablaIngresos] = React.useState([]);
+
+  const [totalTablaLocal, setTotalTablaLocal] = useState(0);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,33 +40,113 @@ const AddRevenue = () => {
   const handleSubmir = (e) => {
     e.preventDefault();
 
-    addRevenue(ingresosScheme);
-    setTablaIngresos([...tablaIngresos, ingresosScheme]);
+    if (ingresosScheme?.ingresos !== "" && ingresosScheme?.actual > 0) {
+      addRevenue(ingresosScheme);
+      setTablaIngresos([...tablaIngresos, ingresosScheme]);
+      setIngresosScheme({
+        ingresos: "",
+        actual: 0,
+        idUser: pb?.authStore?.model?.id,
+      });
+    }
   };
 
+  /* bg-[#202b21] */
+
   return (
-    <section className="w-full h-screen flex items-center justify-center">
-      AddRevenue
-      <form onSubmit={handleSubmir}>
-        <input
-          type="text"
-          placeholder="ingresos"
-          name="ingresos"
-          value={ingresosScheme.ingresos}
-          onChange={handleChange}
-        />
-        <input
-          type="number"
-          placeholder="actual"
-          name="actual"
-          value={ingresosScheme.actual}
-          onChange={handleChange}
-        />
-        <button type="submit">Send</button>
-      </form>
-      {tablaIngresos?.map((dato) => (
-        <p key={dato?.id}>{dato?.ingresos}</p>
-      ))}
+    <section className="w-full h-auto lg:h-screen bg-[#182019] py-10">
+      <div className="container mx-auto w-full h-full px-5 py-20 flex items-center justify-center gap-5">
+        <div className="bg-[#202b21] w-auto p-5 lg:p-20 flex items-start justify-center flex-col lg:flex-row gap-20 rounded-md shadow-lg">
+          <div className="w-full flex items-start flex-col gap-5">
+            <h1 className="text-3xl font-bold text-[#E5F1E8]">
+              Añadir ingresos
+            </h1>
+            <p className="text-[#70907A] text-sm max-w-md">
+              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Hic,
+              molestiae!
+            </p>
+
+            <form
+              onSubmit={handleSubmir}
+              className="flex items-center justify-center gap-5 flex-row w-full mt-5"
+            >
+              <Input
+                type="text"
+                label="ingresos"
+                placeholder="ingresos"
+                isRequired
+                name="ingresos"
+                size="sm"
+                value={ingresosScheme.ingresos}
+                onChange={handleChange}
+              />
+
+              <Input
+                type="number"
+                isRequired
+                label="Cantidad"
+                placeholder="Cantidad"
+                name="actual"
+                size="sm"
+                value={ingresosScheme.actual}
+                onChange={handleChange}
+              />
+
+              <Button
+                isIconOnly
+                color="primary"
+                type="submit"
+                radius="sm"
+                size="lg"
+              >
+                +
+              </Button>
+            </form>
+
+            <Button
+              as={NextLink}
+              href="/dashboard"
+              color="primary"
+              type="button"
+              radius="sm"
+              size="md"
+              className="w-full"
+              variant="flat"
+            >
+              Volver al dashbord
+            </Button>
+          </div>
+
+          <div className="space-y-5 w-full">
+            <h3 className="font-bold text-[#E5F1E8]">Ingresos resientes</h3>
+
+            <ScrollShadow className="w-full max-h-[300px]">
+              <Table removeWrapper aria-label="Tabla de ingresos resientes">
+                <TableHeader>
+                  <TableColumn>id</TableColumn>
+                  <TableColumn>Ingreosos</TableColumn>
+                  <TableColumn>Cantidad</TableColumn>
+                </TableHeader>
+                <TableBody emptyContent={"No has añadido ingresos."}>
+                  {tablaIngresos?.map((dato, index) => (
+                    <TableRow key={index}>
+                      <TableCell className="text-[#959796]">
+                        {index + 1}
+                      </TableCell>
+                      <TableCell className="text-[#E5F1E8]">
+                        {dato?.ingresos}
+                      </TableCell>
+                      <TableCell className="text-green-500">
+                        ${formatNumber(dato?.actual)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </ScrollShadow>
+          </div>
+        </div>
+      </div>
     </section>
   );
 };
