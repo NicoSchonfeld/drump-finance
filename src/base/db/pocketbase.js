@@ -78,8 +78,46 @@ export const totalRevenue = async () => {
       const resSave = await pb
         .collection("total_ingresos")
         .create(saveTotalRevenue);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-      console.log(resSave);
+export const editTotalRevenue = async () => {
+  try {
+    if (pb?.authStore?.isValid) {
+      const resAllRevenue = await pb.collection("ingresos").getFullList({
+        sort: "-created",
+      });
+
+      const onlyAmount = resAllRevenue.filter(
+        (item) => item.idUser == pb?.authStore?.model?.id
+      );
+
+      const totalAmount = onlyAmount.reduce(
+        (acc, item) => (acc += item.actual),
+        0
+      );
+
+      const saveTotalRevenue = {
+        total: totalAmount,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      const resAllTotal_ingresos = await pb
+        .collection("total_ingresos")
+        .getFullList({
+          sort: "-created",
+        });
+
+      const onlyTotalAuthUser = resAllTotal_ingresos.filter(
+        (item) => item.idUser == pb?.authStore?.model?.id
+      );
+
+      const resSave = await pb
+        .collection("total_ingresos")
+        .update(onlyTotalAuthUser[0].id, saveTotalRevenue);
     }
   } catch (error) {
     console.log(error);
@@ -93,8 +131,17 @@ export const addRevenue = async (ingresosScheme) => {
         .collection("ingresos")
         .create(ingresosScheme);
 
-      console.log(resAddRevenue);
-      totalRevenue(); // HAcer una funcion que verifique si existe un total anterior. Si no existe guardar el primer actual que ingrese el usuario, si exite actualizar el valor.
+      const totalIngresos = await pb.collection("total_ingresos").getFullList({
+        sort: "-created",
+      });
+
+      const onlyIngresosUserAuth = totalIngresos.filter(
+        (item) => (item.idUser = pb?.authStore?.model?.id)
+      );
+
+      if (onlyIngresosUserAuth.length <= 0) totalRevenue();
+      if (onlyIngresosUserAuth.length > 0) editTotalRevenue();
+
       return resAddRevenue;
     }
   } catch (error) {
