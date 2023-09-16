@@ -53,3 +53,51 @@ export const getUser = async () => {
     console.log(error);
   }
 };
+
+export const totalRevenue = async () => {
+  try {
+    if (pb?.authStore?.isValid) {
+      const resAllRevenue = await pb.collection("ingresos").getFullList({
+        sort: "-created",
+      });
+
+      const onlyAmount = resAllRevenue.filter(
+        (item) => item.idUser == pb?.authStore?.model?.id
+      );
+
+      const totalAmount = onlyAmount.reduce(
+        (acc, item) => (acc += item.actual),
+        0
+      );
+
+      const saveTotalRevenue = {
+        total: totalAmount,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      const resSave = await pb
+        .collection("total_ingresos")
+        .create(saveTotalRevenue);
+
+      console.log(resSave);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addRevenue = async (ingresosScheme) => {
+  try {
+    if (pb?.authStore?.isValid) {
+      const resAddRevenue = await pb
+        .collection("ingresos")
+        .create(ingresosScheme);
+
+      console.log(resAddRevenue);
+      totalRevenue(); // HAcer una funcion que verifique si existe un total anterior. Si no existe guardar el primer actual que ingrese el usuario, si exite actualizar el valor.
+      return resAddRevenue;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};

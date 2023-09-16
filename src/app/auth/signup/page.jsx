@@ -31,7 +31,6 @@ const SignUp = () => {
     e.preventDefault();
 
     signUp(userSignUpScheme).then((res) => {
-      alert("Usuario creado");
       setUserSignUpScheme({
         username: "",
         email: "",

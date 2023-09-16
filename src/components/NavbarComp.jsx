@@ -46,14 +46,12 @@ const NavbarComp = ({ path }) => {
         shouldHideOnScroll
         isBlurred={false}
         maxWidth="2xl"
-        className="fixed top-0 left-0"
+        className="fixed top-0 left-0 bg-[#202b21]"
       >
         <NavbarBrand>
-          <NextLink
-            href="/"
-            className="font-bold text-inherit text-xl text-[#182019]"
-          >
-            Drump <span className="text-green-500">Finance.</span>
+          <NextLink href="/" className="font-bold text-inherit text-xl">
+            <span className="text-[#EEF8F0]">Drump</span>{" "}
+            <span className="text-green-500">Finance.</span>
           </NextLink>
           <NavbarContent className="hidden md:flex gap-4 ms-5">
             {links?.map((dato, index) => (
@@ -63,7 +61,7 @@ const NavbarComp = ({ path }) => {
               >
                 <Link
                   as={NextLink}
-                  color={path === dato.path ? `success` : `foreground`}
+                  color={path === dato.path ? `success` : `secondary`}
                   href={dato.path}
                   size="sm"
                 >
@@ -79,14 +77,14 @@ const NavbarComp = ({ path }) => {
             className="hidden md:flex gap-4 items-center"
             justify="end"
           >
-            <Dropdown>
+            <Dropdown className="bg-[#202b21]">
               <DropdownTrigger>
                 <Button variant="light" className="py-6">
                   <div className="flex flex-col items-end justify-center">
-                    <p className="leading-3 font-bold">
+                    <p className="leading-3 font-bold text-[#EEF8F0]">
                       {pb?.authStore?.model?.username}
                     </p>
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-[#70907A] text-sm">
                       {pb?.authStore?.model?.email}
                     </p>
                   </div>
@@ -100,8 +98,20 @@ const NavbarComp = ({ path }) => {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions">
-                <DropdownItem key="profile">Perfil</DropdownItem>
-                <DropdownItem key="settings">Ajustes</DropdownItem>
+                <DropdownItem
+                  key="profile"
+                  className="text-[#EEF8F0]"
+                  color="primary"
+                >
+                  Perfil
+                </DropdownItem>
+                <DropdownItem
+                  key="settings"
+                  className="text-[#EEF8F0]"
+                  color="primary"
+                >
+                  Ajustes
+                </DropdownItem>
                 <DropdownItem
                   key="delete"
                   className="text-danger"
@@ -122,16 +132,22 @@ const NavbarComp = ({ path }) => {
               <div>
                 <Skeleton
                   className={
-                    skeleton ? "flex rounded-full w-10 h-10" : "hidden"
+                    skeleton
+                      ? "flex rounded-full w-10 h-10 bg-[#678a69]"
+                      : "hidden"
                   }
                 />
               </div>
               <div className="w-full flex flex-col items-end gap-2">
                 <Skeleton
-                  className={skeleton ? "h-3 w-3/5 rounded-lg" : "hidden"}
+                  className={
+                    skeleton ? "h-3 w-3/5 rounded-lg bg-[#678a69]" : "hidden"
+                  }
                 />
                 <Skeleton
-                  className={skeleton ? "h-3 w-4/5 rounded-lg" : "hidden"}
+                  className={
+                    skeleton ? "h-3 w-4/5 rounded-lg bg-[#678a69]" : "hidden"
+                  }
                 />
               </div>
             </div>

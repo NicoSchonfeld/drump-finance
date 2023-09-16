@@ -29,7 +29,6 @@ const Login = () => {
     e.preventDefault();
 
     signIn(userSignInScheme).then((res) => {
-      alert("Usuario creado");
       setUserSignInScheme({
         email: "",
         password: "",
