@@ -27,6 +27,10 @@ import {
   Tab,
   Card,
   CardBody,
+  ScrollShadow,
+  Input,
+  SelectItem,
+  Select,
 } from "@nextui-org/react";
 import NextImage from "next/image";
 import {
@@ -44,6 +48,14 @@ import {
   isValid,
 } from "@/base/db/pocketbase";
 import { formatNumber } from "@/base/formatNumber";
+import PresupuestoTotal from "@/components/PresupuestoTotal";
+import FacturasTabla from "@/components/FacturasTabla";
+import GastosTabla from "@/components/GastosTabla";
+import AhorrosTabla from "@/components/AhorrosTabla";
+import TotalGastos from "@/components/TotalGastos";
+import Ahorros from "@/components/Ahorros";
+import Graficos from "@/components/Graficos";
+import PresupuestoPorAsignar from "@/components/PresupuestoPorAsignar";
 
 const Dashboard = () => {
   const [totalIngresos, setTotalIngresos] = React.useState(0);
@@ -77,249 +89,27 @@ const Dashboard = () => {
 
   return (
     <>
-      <section className="w-full h-auto bg-[#182019]">
+      <section className="w-full h-auto bg-[#E5F1E8]">
         <div className="container mx-auto w-full h-full px-5 py-20 grid gird-cols-1 md:grid-cols-4 lg:grid-cols-12 gap-5">
-          <div className="row-span-4 col-span-3 text-[#E5F1E8] bg-[#202b21] px-5 py-10 shadow-md rounded-md">
-            <div className="w-full h-auto flex flex-col items-center gap-3 justify-center">
-              <Skeleton
-                className="rounded bg-[#678a69] shadow-md shadow-green-500/50"
-                isLoaded={userIsValid}
-              >
-                <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700  p-2 text-white rounded flex items-center justify-center">
-                  <FaMoneyBillWave className="text-3xl" />
-                </div>
-              </Skeleton>
-              <Skeleton className="rounded bg-[#678a69]" isLoaded={userIsValid}>
-                <h3 className="font-bold text-xl">Presupueto total</h3>
-              </Skeleton>
-              <Skeleton className="rounded bg-[#678a69]" isLoaded={userIsValid}>
-                <p className="font-bold text-3xl text-green-500">
-                  ${formatNumber(totalIngresos)}
-                </p>
-              </Skeleton>
+          <PresupuestoTotal
+            userIsValid={userIsValid}
+            totalIngresos={totalIngresos}
+            method50_30_20={method50_30_20}
+          />
 
-              <div className="mt-10 w-full space-y-10">
-                <Skeleton
-                  className="rounded px-1.5 bg-[#678a69] w-full"
-                  isLoaded={userIsValid}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700  p-2 text-white rounded flex items-center justify-center">
-                      <FaMoneyBillWave className="text-xl" />
-                    </div>
-                    <Progress
-                      label={`Necesidades: $${method50_30_20?.total_50?.toFixed(
-                        2
-                      )}`}
-                      size="sm"
-                      value={10}
-                      maxValue={method50_30_20?.total_50}
-                      color="primary"
-                      /* formatOptions={{ style: "currency", currency: "ARG" }} */
-                      showValueLabel={true}
-                      className="max-w-md"
-                    />
-                  </div>
-                </Skeleton>
+          <PresupuestoPorAsignar />
 
-                <Skeleton
-                  className="rounded px-1.5 bg-[#678a69] w-full"
-                  isLoaded={userIsValid}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700  p-2 text-white rounded flex items-center justify-center">
-                      <FaMoneyBillWave className="text-xl" />
-                    </div>
-                    <Progress
-                      label={`Deseos: $${method50_30_20?.total_30?.toFixed(2)}`}
-                      size="sm"
-                      value={4000}
-                      maxValue={method50_30_20?.total_30}
-                      color="primary"
-                      /* formatOptions={{ style: "currency", currency: "ARS" }} */
-                      showValueLabel={true}
-                      className="max-w-md"
-                    />
-                  </div>
-                </Skeleton>
+          <Ahorros />
 
-                <Skeleton
-                  className="rounded px-1.5 bg-[#678a69] w-full"
-                  isLoaded={userIsValid}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700  p-2 text-white rounded flex items-center justify-center">
-                      <FaMoneyBillWave className="text-xl" />
-                    </div>
-                    <Progress
-                      label={`Ahorros: $${method50_30_20?.total_20?.toFixed(
-                        2
-                      )}`}
-                      size="sm"
-                      value={4000}
-                      maxValue={method50_30_20?.total_20}
-                      color="primary"
-                      /* formatOptions={{ style: "currency", currency: "ARS" }} */
-                      showValueLabel={true}
-                      className="max-w-md"
-                    />
-                  </div>
-                </Skeleton>
-              </div>
-              <div className="mt-5 w-full flex items-center gap-5">
-                <Skeleton
-                  className="rounded bg-[#678a69] w-full"
-                  isLoaded={userIsValid}
-                >
-                  <Button
-                    radius="sm"
-                    color="primary"
-                    variant="bordered"
-                    className="w-full"
-                  >
-                    Ver
-                  </Button>
-                </Skeleton>
+          <TotalGastos />
 
-                <Skeleton
-                  className="rounded bg-[#678a69] w-full"
-                  isLoaded={userIsValid}
-                >
-                  <Button
-                    as={NextLink}
-                    href="/dashboard/add_revenue"
-                    radius="sm"
-                    color="primary"
-                    variant="solid"
-                    className="w-full"
-                  >
-                    Añadir
-                  </Button>
-                </Skeleton>
-              </div>
-            </div>
-          </div>
+          <Graficos />
 
-          <div className="col-span-2 text-[#E5F1E8] bg-[#202b21] shadow-md rounded-md">
-            <div className="flex flex-col items-center justify-center gap-2 w-full h-full px-5">
-              <div className="flex items-center justify-start w-full">
-                <p className="text-start text-sm font-bold">
-                  Presupuesto por asignar
-                </p>
-              </div>
-              <div className="flex flex-col items-start w-full">
-                <div className="w-full flex items-center justify-between">
-                  <h3 className="text-sm text-green-500">Necesidades</h3>
-                  <Tooltip
-                    content={
-                      <div className="px-1 py-2">
-                        <div className="text-small font-bold">
-                          Custom Content
-                        </div>
-                        <div className="text-tiny">
-                          This is a custom tooltip content
-                        </div>
-                      </div>
-                    }
-                    placement="bottom"
-                  >
-                    <Button
-                      isIconOnly
-                      size="sm"
-                      variant="light"
-                      color="primary"
-                    >
-                      <AiOutlineQuestionCircle />
-                    </Button>
-                  </Tooltip>
-                </div>
-                <p className="text-sm">$90.222,00</p>
-              </div>
+          <FacturasTabla />
 
-              <div className="flex flex-col items-start w-full">
-                <div className="w-full flex items-center justify-between">
-                  <h3 className="text-sm text-green-500">Deseos</h3>
-                  <Tooltip content="Aqui va el 30%" placement="bottom">
-                    <Button
-                      isIconOnly
-                      size="sm"
-                      variant="light"
-                      color="primary"
-                    >
-                      <AiOutlineQuestionCircle />
-                    </Button>
-                  </Tooltip>
-                </div>
-                <p className="text-sm">$90.222,00</p>
-              </div>
+          <GastosTabla />
 
-              <div className="flex flex-col items-start w-full">
-                <div className="w-full flex items-center justify-between">
-                  <h3 className="text-sm text-green-500">Ahorros</h3>
-                  <Tooltip content="Aqui va el 20%" placement="bottom">
-                    <Button
-                      isIconOnly
-                      size="sm"
-                      variant="light"
-                      color="primary"
-                    >
-                      <AiOutlineQuestionCircle />
-                    </Button>
-                  </Tooltip>
-                </div>
-                <p className="text-sm">$90.222,00</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-span-3 text-[#E5F1E8] bg-[#202b21] px-5 py-10 shadow-md rounded-md">
-            <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700 shadow-md shadow-green-500/50 p-2 text-white rounded flex items-center justify-center">
-              <FaMoneyBillWave className="text-3xl" />
-            </div>
-            <h3>Ahorros</h3>
-          </div>
-
-          <div className="col-span-2 text-[#E5F1E8] bg-[#202b21] px-5 py-10 shadow-md rounded-md">
-            <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700 shadow-md shadow-green-500/50 p-2 text-white rounded flex items-center justify-center">
-              <FaMoneyBillWave className="text-3xl" />
-            </div>
-            <h3>Ahorros</h3>
-          </div>
-
-          <div className="col-span-2 text-[#E5F1E8] bg-[#202b21] px-5 py-10 shadow-md rounded-md">
-            <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700 shadow-md shadow-green-500/50 p-2 text-white rounded flex items-center justify-center">
-              <FaMoneyBillWave className="text-3xl" />
-            </div>
-            <h3>Total de gastos</h3>
-          </div>
-
-          <div className="row-span-3 col-span-9 text-[#E5F1E8] bg-[#202b21] px-5 py-10 shadow-md rounded-md">
-            <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700 shadow-md shadow-green-500/50 p-2 text-white rounded flex items-center justify-center">
-              <FaMoneyBillWave className="text-3xl" />
-            </div>
-            <h3>Graficos</h3>
-          </div>
-
-          <div className="col-span-12 text-[#E5F1E8] bg-[#202b21] px-5 py-10 shadow-md rounded-md">
-            <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700 shadow-md shadow-green-500/50 p-2 text-white rounded flex items-center justify-center">
-              <FaMoneyBillWave className="text-3xl" />
-            </div>
-            <h3>facturas</h3>
-          </div>
-
-          <div className="col-span-12 text-[#E5F1E8] bg-[#202b21] px-5 py-10 shadow-md rounded-md">
-            <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700 shadow-md shadow-green-500/50 p-2 text-white rounded flex items-center justify-center">
-              <FaMoneyBillWave className="text-3xl" />
-            </div>
-            <h3>gastos</h3>
-          </div>
-
-          <div className="col-span-12 text-[#E5F1E8] bg-[#202b21] px-5 py-10 shadow-md rounded-md">
-            <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700 shadow-md shadow-green-500/50 p-2 text-white rounded flex items-center justify-center">
-              <FaMoneyBillWave className="text-3xl" />
-            </div>
-            <h3>ahorrros</h3>
-          </div>
+          <AhorrosTabla />
 
           <Modal isOpen={!userIsValid}>
             <ModalContent>

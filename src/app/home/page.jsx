@@ -9,14 +9,14 @@ import { motion } from "framer-motion";
 const HomePage = () => {
   return (
     <>
-      {/* bg-[#EEF8F0] */}
-      <main className="w-full h-screen bg-[#182019]">
+      {/* bg-[#EEF8F0] */} {/* bg-[#182019] negro 2 */}
+      <main className="w-full h-screen bg-[#E5F1E8]">
         <div className="container mx-auto w-full h-full px-5 flex items-start justify-center flex-col">
           <div className="flex items-start flex-col gap-5">
             <motion.h1
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-[#EEF8F0] font-bold text-5xl z-[2]"
+              className="text-[#182019] font-bold text-5xl z-[2]"
             >
               Mantenga el{" "}
               <span className="relative text-green-500 overflow-hidden ">
@@ -58,11 +58,10 @@ const HomePage = () => {
           </div>
         </div>
       </main>
-
-      <section className="w-full h-screen bg-[#202b21]">
+      <section className="w-full h-screen bg-[#dde9e0]">
         <div className="container mx-auto w-full h-full px-5 flex items-center justify-start flex-col">
           <div className="flex items-center flex-col gap-5 mt-20">
-            <h1 className="text-[#E5F1E8] font-bold text-5xl z-[2]">
+            <h1 className="text-[#182019] font-bold text-5xl z-[2]">
               50-30-20
             </h1>
 

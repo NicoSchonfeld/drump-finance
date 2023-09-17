@@ -17,9 +17,12 @@ import {
   TableCell,
   Pagination,
   ScrollShadow,
+  Tooltip,
 } from "@nextui-org/react";
 import { formatNumber } from "@/base/formatNumber";
 import NextLink from "next/link";
+
+import { FaArrowLeftLong } from "react-icons/fa6";
 
 const AddRevenue = () => {
   const [ingresosScheme, setIngresosScheme] = React.useState({
@@ -54,11 +57,11 @@ const AddRevenue = () => {
   /* bg-[#202b21] */
 
   return (
-    <section className="w-full h-auto lg:h-screen bg-[#182019] py-10">
+    <section className="w-full h-auto lg:h-screen bg-[#E5F1E8] py-10">
       <div className="container mx-auto w-full h-full px-5 py-20 flex items-center justify-center gap-5">
-        <div className="bg-[#202b21] w-auto p-5 lg:p-20 flex items-start justify-center flex-col lg:flex-row gap-20 rounded-md shadow-lg">
+        <div className="relative bg-white w-auto p-5 lg:p-20 flex items-start justify-center flex-col lg:flex-row gap-20 rounded-md shadow-lg">
           <div className="w-full flex items-start flex-col gap-5">
-            <h1 className="text-3xl font-bold text-[#E5F1E8]">
+            <h1 className="text-3xl font-bold text-[#202b21]">
               Añadir ingresos
             </h1>
             <p className="text-[#70907A] text-sm max-w-md">
@@ -103,22 +106,25 @@ const AddRevenue = () => {
               </Button>
             </form>
 
-            <Button
-              as={NextLink}
-              href="/dashboard"
-              color="primary"
-              type="button"
-              radius="sm"
-              size="md"
-              className="w-full"
-              variant="flat"
-            >
-              Volver al dashbord
-            </Button>
+            <Tooltip content="Volver" placement="right">
+              <Button
+                as={NextLink}
+                href="/dashboard"
+                color="primary"
+                type="button"
+                isIconOnly
+                radius="sm"
+                size="md"
+                variant="light"
+                className="absolute top-3 left-5"
+              >
+                <FaArrowLeftLong className="text-xl" />
+              </Button>
+            </Tooltip>
           </div>
 
           <div className="space-y-5 w-full">
-            <h3 className="font-bold text-[#E5F1E8]">Ingresos resientes</h3>
+            <h3 className="font-bold text-[#202b21]">Ingresos resientes</h3>
 
             <ScrollShadow className="w-full max-h-[300px]">
               <Table removeWrapper aria-label="Tabla de ingresos resientes">
@@ -127,13 +133,13 @@ const AddRevenue = () => {
                   <TableColumn>Ingreosos</TableColumn>
                   <TableColumn>Cantidad</TableColumn>
                 </TableHeader>
-                <TableBody emptyContent={"No has añadido ingresos."}>
+                <TableBody emptyContent={"No has añadido nuevos ingresos."}>
                   {tablaIngresos?.map((dato, index) => (
                     <TableRow key={index}>
                       <TableCell className="text-[#959796]">
                         {index + 1}
                       </TableCell>
-                      <TableCell className="text-[#E5F1E8]">
+                      <TableCell className="text-[#202b21]">
                         {dato?.ingresos}
                       </TableCell>
                       <TableCell className="text-green-500">

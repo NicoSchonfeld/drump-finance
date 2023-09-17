@@ -40,17 +40,20 @@ const NavbarComp = ({ path }) => {
     setTimeout(() => setSkeleton(false), 1000);
   }, []);
 
+  /* [#EEF8F0] blanco */
+  /* [#202b21] negro */
+
   return (
     <>
       <Navbar
         shouldHideOnScroll
         isBlurred={false}
         maxWidth="2xl"
-        className="fixed top-0 left-0 bg-[#202b21]"
+        className="fixed top-0 left-0 bg-white"
       >
         <NavbarBrand>
           <NextLink href="/" className="font-bold text-inherit text-xl">
-            <span className="text-[#EEF8F0]">Drump</span>{" "}
+            <span className="text-[#202b21]">Drump</span>{" "}
             <span className="text-green-500">Finance.</span>
           </NextLink>
           <NavbarContent className="hidden md:flex gap-4 ms-5">
@@ -61,7 +64,7 @@ const NavbarComp = ({ path }) => {
               >
                 <Link
                   as={NextLink}
-                  color={path === dato.path ? `success` : `secondary`}
+                  color={path === dato.path ? `success` : `foreground`}
                   href={dato.path}
                   size="sm"
                 >
@@ -77,11 +80,11 @@ const NavbarComp = ({ path }) => {
             className="hidden md:flex gap-4 items-center"
             justify="end"
           >
-            <Dropdown className="bg-[#202b21]">
+            <Dropdown className="bg-white">
               <DropdownTrigger>
                 <Button variant="light" className="py-6">
                   <div className="flex flex-col items-end justify-center">
-                    <p className="leading-3 font-bold text-[#EEF8F0]">
+                    <p className="leading-3 font-bold text-[#202b21]">
                       {pb?.authStore?.model?.username}
                     </p>
                     <p className="text-[#70907A] text-sm">
@@ -100,14 +103,14 @@ const NavbarComp = ({ path }) => {
               <DropdownMenu aria-label="Static Actions">
                 <DropdownItem
                   key="profile"
-                  className="text-[#EEF8F0]"
+                  className="text-[#202b21]"
                   color="primary"
                 >
                   Perfil
                 </DropdownItem>
                 <DropdownItem
                   key="settings"
-                  className="text-[#EEF8F0]"
+                  className="text-[#202b21]"
                   color="primary"
                 >
                   Ajustes
@@ -133,7 +136,7 @@ const NavbarComp = ({ path }) => {
                 <Skeleton
                   className={
                     skeleton
-                      ? "flex rounded-full w-10 h-10 bg-[#678a69]"
+                      ? "flex rounded-full w-10 h-10 bg-[#bfd1c0]"
                       : "hidden"
                   }
                 />
@@ -141,12 +144,12 @@ const NavbarComp = ({ path }) => {
               <div className="w-full flex flex-col items-end gap-2">
                 <Skeleton
                   className={
-                    skeleton ? "h-3 w-3/5 rounded-lg bg-[#678a69]" : "hidden"
+                    skeleton ? "h-3 w-3/5 rounded-lg bg-[#bfd1c0]" : "hidden"
                   }
                 />
                 <Skeleton
                   className={
-                    skeleton ? "h-3 w-4/5 rounded-lg bg-[#678a69]" : "hidden"
+                    skeleton ? "h-3 w-4/5 rounded-lg bg-[#bfd1c0]" : "hidden"
                   }
                 />
               </div>
