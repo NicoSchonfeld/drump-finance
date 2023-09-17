@@ -250,5 +250,3 @@ export const getTotalMethod50_30_20 = async () => {
     console.log(error);
   }
 };
-
-getTotalMethod50_30_20();

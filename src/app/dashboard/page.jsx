@@ -23,6 +23,10 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
+  Tabs,
+  Tab,
+  Card,
+  CardBody,
 } from "@nextui-org/react";
 import NextImage from "next/image";
 import {
@@ -196,11 +200,76 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="col-span-3 text-[#E5F1E8] bg-[#202b21] px-5 py-10 shadow-md rounded-md">
-            <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700 shadow-md shadow-green-500/50 p-2 text-white rounded flex items-center justify-center">
-              <FaMoneyBillWave className="text-3xl" />
+          <div className="col-span-2 text-[#E5F1E8] bg-[#202b21] shadow-md rounded-md">
+            <div className="flex flex-col items-center justify-center gap-2 w-full h-full px-5">
+              <div className="flex items-center justify-start w-full">
+                <p className="text-start text-sm font-bold">
+                  Presupuesto por asignar
+                </p>
+              </div>
+              <div className="flex flex-col items-start w-full">
+                <div className="w-full flex items-center justify-between">
+                  <h3 className="text-sm text-green-500">Necesidades</h3>
+                  <Tooltip
+                    content={
+                      <div className="px-1 py-2">
+                        <div className="text-small font-bold">
+                          Custom Content
+                        </div>
+                        <div className="text-tiny">
+                          This is a custom tooltip content
+                        </div>
+                      </div>
+                    }
+                    placement="bottom"
+                  >
+                    <Button
+                      isIconOnly
+                      size="sm"
+                      variant="light"
+                      color="primary"
+                    >
+                      <AiOutlineQuestionCircle />
+                    </Button>
+                  </Tooltip>
+                </div>
+                <p className="text-sm">$90.222,00</p>
+              </div>
+
+              <div className="flex flex-col items-start w-full">
+                <div className="w-full flex items-center justify-between">
+                  <h3 className="text-sm text-green-500">Deseos</h3>
+                  <Tooltip content="Aqui va el 30%" placement="bottom">
+                    <Button
+                      isIconOnly
+                      size="sm"
+                      variant="light"
+                      color="primary"
+                    >
+                      <AiOutlineQuestionCircle />
+                    </Button>
+                  </Tooltip>
+                </div>
+                <p className="text-sm">$90.222,00</p>
+              </div>
+
+              <div className="flex flex-col items-start w-full">
+                <div className="w-full flex items-center justify-between">
+                  <h3 className="text-sm text-green-500">Ahorros</h3>
+                  <Tooltip content="Aqui va el 20%" placement="bottom">
+                    <Button
+                      isIconOnly
+                      size="sm"
+                      variant="light"
+                      color="primary"
+                    >
+                      <AiOutlineQuestionCircle />
+                    </Button>
+                  </Tooltip>
+                </div>
+                <p className="text-sm">$90.222,00</p>
+              </div>
             </div>
-            <h3>Presupuesto por asignar</h3>
           </div>
 
           <div className="col-span-3 text-[#E5F1E8] bg-[#202b21] px-5 py-10 shadow-md rounded-md">
@@ -210,7 +279,14 @@ const Dashboard = () => {
             <h3>Ahorros</h3>
           </div>
 
-          <div className="max-h-[200px] overflow-hidden col-span-3 text-[#E5F1E8] bg-[#202b21] px-5 py-10 shadow-md rounded-md">
+          <div className="col-span-2 text-[#E5F1E8] bg-[#202b21] px-5 py-10 shadow-md rounded-md">
+            <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700 shadow-md shadow-green-500/50 p-2 text-white rounded flex items-center justify-center">
+              <FaMoneyBillWave className="text-3xl" />
+            </div>
+            <h3>Ahorros</h3>
+          </div>
+
+          <div className="col-span-2 text-[#E5F1E8] bg-[#202b21] px-5 py-10 shadow-md rounded-md">
             <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700 shadow-md shadow-green-500/50 p-2 text-white rounded flex items-center justify-center">
               <FaMoneyBillWave className="text-3xl" />
             </div>
