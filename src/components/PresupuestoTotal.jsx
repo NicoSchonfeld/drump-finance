@@ -49,7 +49,12 @@ import {
 } from "@/base/db/pocketbase";
 import { formatNumber } from "@/base/formatNumber";
 
-const PresupuestoTotal = ({ userIsValid, totalIngresos, method50_30_20 }) => {
+const PresupuestoTotal = ({
+  userIsValid,
+  totalIngresos,
+  method50_30_20,
+  presupuestoPorAsignar,
+}) => {
   return (
     <>
       <div className="row-span-4 col-span-3 text-[#202b21] bg-white px-5 py-10 shadow-md rounded-md">
@@ -83,9 +88,9 @@ const PresupuestoTotal = ({ userIsValid, totalIngresos, method50_30_20 }) => {
                 <Progress
                   label={`Necesidades: $${
                     method50_30_20?.total_50?.toFixed(2) ?? 0
-                  }`}
+                  } - ${presupuestoPorAsignar * 0.5}`}
                   size="sm"
-                  value={10}
+                  value={presupuestoPorAsignar * 0.5}
                   maxValue={method50_30_20?.total_50}
                   color="primary"
                   /* formatOptions={{ style: "currency", currency: "ARG" }} */
@@ -108,7 +113,7 @@ const PresupuestoTotal = ({ userIsValid, totalIngresos, method50_30_20 }) => {
                     method50_30_20?.total_30?.toFixed(2) ?? 0
                   }`}
                   size="sm"
-                  value={4000}
+                  value={presupuestoPorAsignar * 0.3}
                   maxValue={method50_30_20?.total_30}
                   color="primary"
                   /* formatOptions={{ style: "currency", currency: "ARS" }} */
@@ -131,7 +136,7 @@ const PresupuestoTotal = ({ userIsValid, totalIngresos, method50_30_20 }) => {
                     method50_30_20?.total_20?.toFixed(2) ?? 0
                   }`}
                   size="sm"
-                  value={4000}
+                  value={presupuestoPorAsignar * 0.2}
                   maxValue={method50_30_20?.total_20}
                   color="primary"
                   /* formatOptions={{ style: "currency", currency: "ARS" }} */

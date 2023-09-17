@@ -46,6 +46,9 @@ import {
   getTotalRevenue,
   pb,
   isValid,
+  getPresupuestoXAsignar,
+  getFacutras,
+  getTotalFacutras,
 } from "@/base/db/pocketbase";
 import { formatNumber } from "@/base/formatNumber";
 import PresupuestoTotal from "@/components/PresupuestoTotal";
@@ -60,6 +63,30 @@ import PresupuestoPorAsignar from "@/components/PresupuestoPorAsignar";
 const Dashboard = () => {
   const [totalIngresos, setTotalIngresos] = React.useState(0);
   const [method50_30_20, setMethod50_30_20] = React.useState();
+  const [presupuestoPorAsignar, setPresupuestoPorAsignar] = React.useState(0);
+  const [tablaFacturas, setTablaFacturas] = React.useState([]);
+  const [totalFacturas, setTotalFacturas] = React.useState(0);
+
+  const categorias = [
+    { id: 1, title: "Necesidades", value: 1 },
+    { id: 2, title: "Deseos", value: 2 },
+    { id: 3, title: "Ahorros", value: 3 },
+  ];
+
+  const tipos = [
+    { id: 1, title: "Hogar", value: 1 },
+    { id: 2, title: "Ocio", value: 2 },
+    { id: 3, title: "Suscripciones", value: 3 },
+    { id: 4, title: "Supermercado", value: 4 },
+    { id: 5, title: "Transporte", value: 5 },
+    { id: 6, title: "Entretenimiento", value: 6 },
+    { id: 7, title: "Delivery", value: 7 },
+    { id: 8, title: "Gym", value: 8 },
+    { id: 9, title: "Deudas", value: 9 },
+    { id: 10, title: "Necesidades", value: 10 },
+    { id: 11, title: "Cuidado Personal", value: 11 },
+    { id: 12, title: "Otros", value: 12 },
+  ];
 
   React.useEffect(() => {
     if (pb?.authStore?.isValid) {
@@ -79,6 +106,30 @@ const Dashboard = () => {
         }
       });
     }
+
+    getPresupuestoXAsignar().then((res) => {
+      if (res[0]) {
+        setPresupuestoPorAsignar(res[0].total);
+      } else {
+        return;
+      }
+    });
+
+    getFacutras().then((res) => {
+      if (res[0]) {
+        setTablaFacturas(res);
+      } else {
+        return;
+      }
+    });
+
+    getTotalFacutras().then((res) => {
+      if (res[0]) {
+        setTotalFacturas(res[0].total);
+      } else {
+        return;
+      }
+    });
   }, []);
 
   const [userIsValid, setUserIsValid] = React.useState(false);
@@ -95,9 +146,12 @@ const Dashboard = () => {
             userIsValid={userIsValid}
             totalIngresos={totalIngresos}
             method50_30_20={method50_30_20}
+            presupuestoPorAsignar={presupuestoPorAsignar}
           />
 
-          <PresupuestoPorAsignar />
+          <PresupuestoPorAsignar
+            presupuestoPorAsignar={presupuestoPorAsignar}
+          />
 
           <Ahorros />
 
@@ -105,7 +159,12 @@ const Dashboard = () => {
 
           <Graficos />
 
-          <FacturasTabla />
+          <FacturasTabla
+            categorias={categorias}
+            tipos={tipos}
+            tablaFacturas={tablaFacturas}
+            totalFacturas={totalFacturas}
+          />
 
           <GastosTabla />
 
