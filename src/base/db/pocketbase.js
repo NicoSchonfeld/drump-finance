@@ -363,6 +363,27 @@ export const editFacturas = async () => {
         .collection("total_facturas")
         .update(getOnlyFactAuthUser[0]?.id, saveTotalRevenue);
 
+      /* Edit presupuesto por asignar */
+
+      const allPResupuetosXAsignar = await pb
+        .collection("total_presupuesto_por_asignar")
+        .getFullList({
+          sort: "-created",
+        });
+
+      const onlyPresAuthUser = allPResupuetosXAsignar.filter(
+        (item) => item.idUser == pb?.authStore?.model?.id
+      );
+
+      const data = {
+        total: onlyPresAuthUser[0]?.total - totalFacturas,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      const record = await pb
+        .collection("total_presupuesto_por_asignar")
+        .update(onlyPresAuthUser[0]?.id, data);
+
       return updateTotalFacturas;
     }
   } catch (error) {
@@ -389,6 +410,151 @@ export const addFacturas = async (facturasScheme) => {
       if (onlyFacturasAuthUser.length > 0) editFacturas();
 
       return addFacturas;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/* GASTOS */
+
+export const createGastos = async () => {
+  try {
+    if (pb?.authStore?.isValid) {
+      const allGastos = await pb.collection("gastos").getFullList({
+        sort: "-created",
+      });
+
+      const onlyGastosAuthUser = allGastos.filter(
+        (item) => item.idUser == pb?.authStore?.model?.id
+      );
+
+      const totalAmount = onlyGastosAuthUser.reduce(
+        (acc, item) => (acc += item.presupuesto),
+        0
+      );
+
+      const totalGstosObject = {
+        total: totalAmount,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      const saveTotalGastos = await pb
+        .collection("total_gastos")
+        .create(totalGstosObject);
+
+      /* Edit presupuesto por asignar */
+
+      const allPResupuetosXAsignar = await pb
+        .collection("total_presupuesto_por_asignar")
+        .getFullList({
+          sort: "-created",
+        });
+
+      const onlyPresAuthUser = allPResupuetosXAsignar.filter(
+        (item) => item.idUser == pb?.authStore?.model?.id
+      );
+
+      const data = {
+        total: onlyPresAuthUser[0]?.total - totalAmount,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      const record = await pb
+        .collection("total_presupuesto_por_asignar")
+        .update(onlyPresAuthUser[0]?.id, data);
+
+      console.log(
+        JSON.stringify(record, null, 2) + " <<<<<<<<<<<<<<<<<<<<<<<<"
+      );
+
+      return saveTotalGastos;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const editGastos = async () => {
+  try {
+    if (pb?.authStore?.isValid) {
+      const allGastos = await pb.collection("gastos").getFullList({
+        sort: "-created",
+      });
+
+      const onlyGastosAuthUser = allGastos.filter(
+        (item) => item.idUser == pb?.authStore?.model?.id
+      );
+
+      const totalAmount = onlyGastosAuthUser.reduce(
+        (acc, item) => (acc += item.presupuesto),
+        0
+      );
+
+      const totalGstosObject = {
+        total: totalAmount,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      const allTotalGastosGet = await pb
+        .collection("total_gastos")
+        .getFullList({
+          sort: "-created",
+        });
+
+      const getOnlyGastosAuthUser = allTotalGastosGet.filter(
+        (item) => item.idUser == pb?.authStore?.model?.id
+      );
+
+      const updateTotalGastos = await pb
+        .collection("total_gastos")
+        .update(getOnlyGastosAuthUser[0]?.id, totalGstosObject);
+
+      /* Edit presupuesto por asignar */
+
+      const allPResupuetosXAsignar = await pb
+        .collection("total_presupuesto_por_asignar")
+        .getFullList({
+          sort: "-created",
+        });
+
+      const onlyPresAuthUser = allPResupuetosXAsignar.filter(
+        (item) => item.idUser == pb?.authStore?.model?.id
+      );
+
+      const data = {
+        total: onlyPresAuthUser[0]?.total - totalAmount,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      const record = await pb
+        .collection("total_presupuesto_por_asignar")
+        .update(onlyPresAuthUser[0]?.id, data);
+
+      return updateTotalGastos;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addGastos = async (gastosScheme) => {
+  try {
+    if (pb?.authStore?.isValid) {
+      const addGastos = await pb.collection("gastos").create(gastosScheme);
+
+      const allTotalGastos = await pb.collection("total_gastos").getFullList({
+        sort: "-created",
+      });
+
+      const onlyTotalGastosAuthUser = allTotalGastos.filter(
+        (item) => item.idUser == pb?.authStore?.model?.id
+      );
+
+      if (onlyTotalGastosAuthUser.length <= 0) createGastos();
+      if (onlyTotalGastosAuthUser.length > 0) editGastos();
+
+      return addGastos;
     }
   } catch (error) {
     console.log(error);
@@ -475,4 +641,28 @@ export const getTotalFacutras = async () => {
   );
 
   return onlyTotalFacturasAuthUser;
+};
+
+export const getGastos = async () => {
+  const allGastos = await pb.collection("gastos").getFullList({
+    sort: "-created",
+  });
+
+  const onlyGastosAuthUser = allGastos.filter(
+    (item) => item.idUser == pb?.authStore?.model?.id
+  );
+
+  return onlyGastosAuthUser;
+};
+
+export const getTotalGastos = async () => {
+  const allGastos = await pb.collection("total_gastos").getFullList({
+    sort: "-created",
+  });
+
+  const onlyTotalGastosAuthUser = allGastos.filter(
+    (item) => item.idUser == pb?.authStore?.model?.id
+  );
+
+  return onlyTotalGastosAuthUser;
 };

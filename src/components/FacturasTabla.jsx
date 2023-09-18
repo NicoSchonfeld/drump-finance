@@ -15,7 +15,13 @@ import {
 } from "@nextui-org/react";
 import React from "react";
 
-const FacturasTabla = ({ tipos, categorias, tablaFacturas, totalFacturas }) => {
+const FacturasTabla = ({
+  tipos,
+  categorias,
+  tablaFacturas,
+  totalFacturas,
+  presupuestoPorAsignar,
+}) => {
   const [facturaScheme, setFacturaScheme] = React.useState({
     facturas: "",
     presupuesto: 0,
@@ -211,16 +217,31 @@ const FacturasTabla = ({ tipos, categorias, tablaFacturas, totalFacturas }) => {
               ))}
             </Select>
 
-            <Button
-              type="submit"
-              color="primary"
-              variant="solid"
-              isIconOnly
-              size="lg"
-              radius="sm"
-            >
-              +
-            </Button>
+            {presupuestoPorAsignar <= 0 ? (
+              <Button
+                type="submit"
+                color="default"
+                variant="solid"
+                disabled
+                isIconOnly
+                size="lg"
+                radius="sm"
+                className="cursor-not-allowed"
+              >
+                +
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                color="primary"
+                variant="solid"
+                isIconOnly
+                size="lg"
+                radius="sm"
+              >
+                +
+              </Button>
+            )}
           </form>
 
           <Table

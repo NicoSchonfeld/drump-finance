@@ -49,6 +49,8 @@ import {
   getPresupuestoXAsignar,
   getFacutras,
   getTotalFacutras,
+  getTotalGastos,
+  getGastos,
 } from "@/base/db/pocketbase";
 import { formatNumber } from "@/base/formatNumber";
 import PresupuestoTotal from "@/components/PresupuestoTotal";
@@ -66,6 +68,8 @@ const Dashboard = () => {
   const [presupuestoPorAsignar, setPresupuestoPorAsignar] = React.useState(0);
   const [tablaFacturas, setTablaFacturas] = React.useState([]);
   const [totalFacturas, setTotalFacturas] = React.useState(0);
+  const [tablaGastos, setTablaGastos] = React.useState([]);
+  const [totalGastos, setTotalGastos] = React.useState(0);
 
   const categorias = [
     { id: 1, title: "Necesidades", value: 1 },
@@ -109,7 +113,7 @@ const Dashboard = () => {
 
     getPresupuestoXAsignar().then((res) => {
       if (res[0]) {
-        setPresupuestoPorAsignar(res[0].total);
+        setPresupuestoPorAsignar(res[0]?.total);
       } else {
         return;
       }
@@ -125,7 +129,23 @@ const Dashboard = () => {
 
     getTotalFacutras().then((res) => {
       if (res[0]) {
-        setTotalFacturas(res[0].total);
+        setTotalFacturas(res[0]?.total);
+      } else {
+        return;
+      }
+    });
+
+    getGastos().then((res) => {
+      if (res[0]) {
+        setTablaGastos(res);
+      } else {
+        return;
+      }
+    });
+
+    getTotalGastos().then((res) => {
+      if (res[0]) {
+        setTotalGastos(res[0]?.total);
       } else {
         return;
       }
@@ -164,9 +184,16 @@ const Dashboard = () => {
             tipos={tipos}
             tablaFacturas={tablaFacturas}
             totalFacturas={totalFacturas}
+            presupuestoPorAsignar={presupuestoPorAsignar}
           />
 
-          <GastosTabla />
+          <GastosTabla
+            categorias={categorias}
+            tipos={tipos}
+            tablaGastos={tablaGastos}
+            totalGastos={totalGastos}
+            presupuestoPorAsignar={presupuestoPorAsignar}
+          />
 
           <AhorrosTabla />
 

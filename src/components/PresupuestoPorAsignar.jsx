@@ -12,7 +12,7 @@ const PresupuestoPorAsignar = ({ presupuestoPorAsignar }) => {
             <p className="text-start text-sm font-bold">
               Presupuesto por asignar:{" "}
               <span className="font-normal">
-                ${formatNumber(presupuestoPorAsignar)}
+                ${formatNumber(presupuestoPorAsignar.toFixed(2))}
               </span>
             </p>
           </div>

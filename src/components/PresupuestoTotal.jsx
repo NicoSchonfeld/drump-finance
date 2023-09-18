@@ -88,9 +88,9 @@ const PresupuestoTotal = ({
                 <Progress
                   label={`Necesidades: $${
                     method50_30_20?.total_50?.toFixed(2) ?? 0
-                  } - ${presupuestoPorAsignar * 0.5}`}
+                  }`}
                   size="sm"
-                  value={presupuestoPorAsignar * 0.5}
+                  value={presupuestoPorAsignar /* * 0.5 */}
                   maxValue={method50_30_20?.total_50}
                   color="primary"
                   /* formatOptions={{ style: "currency", currency: "ARG" }} */
@@ -113,7 +113,7 @@ const PresupuestoTotal = ({
                     method50_30_20?.total_30?.toFixed(2) ?? 0
                   }`}
                   size="sm"
-                  value={presupuestoPorAsignar * 0.3}
+                  value={presupuestoPorAsignar /* * 0.3 */}
                   maxValue={method50_30_20?.total_30}
                   color="primary"
                   /* formatOptions={{ style: "currency", currency: "ARS" }} */
@@ -136,7 +136,7 @@ const PresupuestoTotal = ({
                     method50_30_20?.total_20?.toFixed(2) ?? 0
                   }`}
                   size="sm"
-                  value={presupuestoPorAsignar * 0.2}
+                  value={presupuestoPorAsignar /* * 0.2 */}
                   maxValue={method50_30_20?.total_20}
                   color="primary"
                   /* formatOptions={{ style: "currency", currency: "ARS" }} */
