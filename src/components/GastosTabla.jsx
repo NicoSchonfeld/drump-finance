@@ -12,6 +12,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  Tooltip,
 } from "@nextui-org/react";
 import React from "react";
 
@@ -218,18 +219,20 @@ const GastosTabla = ({
             </Select>
 
             {presupuestoPorAsignar <= 0 ? (
-              <Button
-                type="submit"
-                color="default"
-                variant="solid"
-                disabled
-                isIconOnly
-                size="lg"
-                radius="sm"
-                className="cursor-not-allowed"
-              >
-                +
-              </Button>
+              <Tooltip content="No tienes presupuesto suficiente para asignar">
+                <Button
+                  type="submit"
+                  color="default"
+                  variant="solid"
+                  disabled
+                  isIconOnly
+                  size="lg"
+                  radius="sm"
+                  className="cursor-not-allowed"
+                >
+                  +
+                </Button>
+              </Tooltip>
             ) : (
               <Button
                 type="submit"

@@ -51,6 +51,8 @@ import {
   getTotalFacutras,
   getTotalGastos,
   getGastos,
+  getAhorros,
+  getTotalAhorros,
 } from "@/base/db/pocketbase";
 import { formatNumber } from "@/base/formatNumber";
 import PresupuestoTotal from "@/components/PresupuestoTotal";
@@ -70,6 +72,8 @@ const Dashboard = () => {
   const [totalFacturas, setTotalFacturas] = React.useState(0);
   const [tablaGastos, setTablaGastos] = React.useState([]);
   const [totalGastos, setTotalGastos] = React.useState(0);
+  const [tablaAhorros, setTablaAhorros] = React.useState([]);
+  const [totalAhorros, setTotalAhorros] = React.useState(0);
 
   const categorias = [
     { id: 1, title: "Necesidades", value: 1 },
@@ -150,6 +154,22 @@ const Dashboard = () => {
         return;
       }
     });
+
+    getAhorros().then((res) => {
+      if (res[0]) {
+        setTablaAhorros(res);
+      } else {
+        return;
+      }
+    });
+
+    getTotalAhorros().then((res) => {
+      if (res[0]) {
+        setTotalAhorros(res[0]?.total);
+      } else {
+        return;
+      }
+    });
   }, []);
 
   const [userIsValid, setUserIsValid] = React.useState(false);
@@ -175,7 +195,10 @@ const Dashboard = () => {
 
           <Ahorros />
 
-          <TotalGastos />
+          <TotalGastos
+            totalFacturas={totalFacturas}
+            totalGastos={totalGastos}
+          />
 
           <Graficos />
 
@@ -195,7 +218,13 @@ const Dashboard = () => {
             presupuestoPorAsignar={presupuestoPorAsignar}
           />
 
-          <AhorrosTabla />
+          <AhorrosTabla
+            categorias={categorias}
+            tipos={tipos}
+            tablaAhorros={tablaAhorros}
+            totalAhorros={totalAhorros}
+            presupuestoPorAsignar={presupuestoPorAsignar}
+          />
 
           <Modal isOpen={!userIsValid}>
             <ModalContent>

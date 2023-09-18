@@ -561,6 +561,147 @@ export const addGastos = async (gastosScheme) => {
   }
 };
 
+/* AHORROS */
+
+export const createAhorros = async () => {
+  try {
+    if (pb?.authStore?.isValid) {
+      const allAhorros = await pb.collection("ahorros").getFullList({
+        sort: "-created",
+      });
+
+      const onlyAhorrosAuthUser = allAhorros.filter(
+        (item) => item.idUser == pb?.authStore?.model?.id
+      );
+
+      const totalAmount = onlyAhorrosAuthUser.reduce(
+        (acc, item) => (acc += item.presupuesto),
+        0
+      );
+
+      const totalAhorrosObject = {
+        total: totalAmount,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      const saveTotalAhorros = await pb
+        .collection("total_ahorros")
+        .create(totalAhorrosObject);
+
+      /* Edit presupuesto por asignar */
+
+      const allPResupuetosXAsignar = await pb
+        .collection("total_presupuesto_por_asignar")
+        .getFullList({
+          sort: "-created",
+        });
+
+      const onlyPresAuthUser = allPResupuetosXAsignar.filter(
+        (item) => item.idUser == pb?.authStore?.model?.id
+      );
+
+      const data = {
+        total: onlyPresAuthUser[0]?.total - totalAmount,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      const record = await pb
+        .collection("total_presupuesto_por_asignar")
+        .update(onlyPresAuthUser[0]?.id, data);
+
+      return saveTotalAhorros;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const editAhorros = async () => {
+  try {
+    if (pb?.authStore?.isValid) {
+      const allAhorros = await pb.collection("ahorros").getFullList({
+        sort: "-created",
+      });
+
+      const onlyAhorrosAuthUser = allAhorros.filter(
+        (item) => item.idUser == pb?.authStore?.model?.id
+      );
+
+      const totalAmount = onlyAhorrosAuthUser.reduce(
+        (acc, item) => (acc += item.presupuesto),
+        0
+      );
+
+      const totalAhorrosObject = {
+        total: totalAmount,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      const allTotalAhorrosGet = await pb
+        .collection("total_ahorros")
+        .getFullList({
+          sort: "-created",
+        });
+
+      const getOnlyGastosAuthUser = allTotalAhorrosGet.filter(
+        (item) => item.idUser == pb?.authStore?.model?.id
+      );
+
+      const updateTotalGastos = await pb
+        .collection("total_ahorros")
+        .update(getOnlyGastosAuthUser[0]?.id, totalAhorrosObject);
+
+      /* Edit presupuesto por asignar */
+
+      const allPResupuetosXAsignar = await pb
+        .collection("total_presupuesto_por_asignar")
+        .getFullList({
+          sort: "-created",
+        });
+
+      const onlyPresAuthUser = allPResupuetosXAsignar.filter(
+        (item) => item.idUser == pb?.authStore?.model?.id
+      );
+
+      const data = {
+        total: onlyPresAuthUser[0]?.total - totalAmount,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      const record = await pb
+        .collection("total_presupuesto_por_asignar")
+        .update(onlyPresAuthUser[0]?.id, data);
+
+      return updateTotalGastos;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addAhorros = async (ahorrosScheme) => {
+  try {
+    if (pb?.authStore?.isValid) {
+      const addAhorros = await pb.collection("ahorros").create(ahorrosScheme);
+
+      const allTotalAhorros = await pb.collection("total_ahorros").getFullList({
+        sort: "-created",
+      });
+
+      const onlyTotalAhorrosAuthUser = allTotalAhorros.filter(
+        (item) => item.idUser == pb?.authStore?.model?.id
+      );
+
+      if (onlyTotalAhorrosAuthUser.length <= 0) createAhorros();
+      if (onlyTotalAhorrosAuthUser.length > 0) editAhorros();
+
+      return addAhorros;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /* GET */
 
 export const getTotalRevenue = async () => {
@@ -665,4 +806,28 @@ export const getTotalGastos = async () => {
   );
 
   return onlyTotalGastosAuthUser;
+};
+
+export const getAhorros = async () => {
+  const allAhorros = await pb.collection("ahorros").getFullList({
+    sort: "-created",
+  });
+
+  const onlyAhorrosAuthUser = allAhorros.filter(
+    (item) => item.idUser == pb?.authStore?.model?.id
+  );
+
+  return onlyAhorrosAuthUser;
+};
+
+export const getTotalAhorros = async () => {
+  const allAhorros = await pb.collection("total_ahorros").getFullList({
+    sort: "-created",
+  });
+
+  const onlyTotalAhorrosAuthUser = allAhorros.filter(
+    (item) => item.idUser == pb?.authStore?.model?.id
+  );
+
+  return onlyTotalAhorrosAuthUser;
 };
