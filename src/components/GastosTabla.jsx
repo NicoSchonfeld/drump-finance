@@ -253,7 +253,7 @@ const GastosTabla = ({
             aria-label="Tabla de ingresos resientes"
             className={
               tablaGastos?.length > 0
-                ? "w-full h-[200px] overflow-auto"
+                ? "w-full h-[300px] overflow-auto"
                 : "w-full h-auto overflow-auto"
             }
           >
@@ -262,24 +262,56 @@ const GastosTabla = ({
               <TableColumn>Presupuesto</TableColumn>
               <TableColumn>Tipo</TableColumn>
               <TableColumn>Categorias</TableColumn>
+              <TableColumn>Acciones</TableColumn>
             </TableHeader>
             <TableBody emptyContent={"No has añadido Gastos."}>
-              {tablaGastos?.map((dato) => (
-                <TableRow key={dato?.id}>
-                  <TableCell className="text-[#202b21]">
-                    {dato?.gastos}
-                  </TableCell>
-                  <TableCell className="text-green-500">
-                    ${dato?.presupuesto}
-                  </TableCell>
-                  <TableCell className="text-green-500">
-                    {returnTipos(dato?.tipos)}
-                  </TableCell>
-                  <TableCell className="text-green-500">
-                    {returnCategorias(dato?.categorias)}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {tablaGastos
+                ?.map((dato) => (
+                  <TableRow key={dato?.id}>
+                    <TableCell className="text-[#202b21]">
+                      {dato?.gastos}
+                    </TableCell>
+                    <TableCell className="text-green-500">
+                      ${dato?.presupuesto}
+                    </TableCell>
+                    <TableCell className="text-green-500">
+                      {returnTipos(dato?.tipos)}
+                    </TableCell>
+                    <TableCell className="text-green-500">
+                      {returnCategorias(dato?.categorias)}
+                    </TableCell>
+                    <TableCell className="text-[#202b21]">
+                      <Dropdown placement="left">
+                        <DropdownTrigger>
+                          <Button variant="light" isIconOnly>
+                            <SlOptionsVertical className="text-gray-800" />
+                          </Button>
+                        </DropdownTrigger>
+                        <DropdownMenu
+                          aria-label="Static Actions"
+                          color="primary"
+                        >
+                          <DropdownItem key="Editar">
+                            <div className="flex items-center gap-3">
+                              <AiOutlineEdit /> Editar
+                            </div>
+                          </DropdownItem>
+                          <DropdownItem
+                            key="Eliminar"
+                            className="text-danger"
+                            color="danger"
+                          >
+                            <div className="flex items-center gap-3">
+                              <AiOutlineDelete />
+                              Eliminar
+                            </div>
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </TableCell>
+                  </TableRow>
+                ))
+                .reverse()}
             </TableBody>
           </Table>
           <div className="w-full px-2 py-2.5 flex items-center justify-start">

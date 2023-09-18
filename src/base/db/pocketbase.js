@@ -396,6 +396,65 @@ export const editFacturas = async () => {
   }
 };
 
+export const deleteFacturas = async (dato) => {
+  try {
+    if (pb?.authStore?.isValid) {
+      /* Actualizar presupuesto por asignar */
+      const allPresupuestos = await pb
+        .collection("total_presupuesto_por_asignar")
+        .getFullList({
+          sort: "-created",
+        });
+
+      const onlyPresupuestoAuthUser = allPresupuestos.filter(
+        (item) => item?.idUser == pb?.authStore?.model?.id
+      );
+
+      const sumaDePres = onlyPresupuestoAuthUser[0]?.total + dato?.presupuesto;
+
+      const sumaDePresupuesto = {
+        total: sumaDePres,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      const saveNewPresupuesto = await pb
+        .collection("total_presupuesto_por_asignar")
+        .update(onlyPresupuestoAuthUser[0]?.id, sumaDePresupuesto);
+
+      /* Actualizar Total de factura */
+      const allTotalFacturas = await pb
+        .collection("total_facturas")
+        .getFullList({
+          sort: "-created",
+        });
+
+      const onlyTotalFacAuthUser = allTotalFacturas.filter(
+        (item) => item?.idUser == pb?.authStore?.model?.id
+      );
+
+      const restaDeTotalFacturas =
+        onlyTotalFacAuthUser[0]?.total - dato?.presupuesto;
+
+      const restaDelTotalFac = {
+        total: restaDeTotalFacturas,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      const saveNewTotalFactura = await pb
+        .collection("total_facturas")
+        .update(onlyTotalFacAuthUser[0]?.id, restaDelTotalFac);
+
+      /* Eliminar factura */
+
+      const deleteFactura = await pb.collection("facturas").delete(dato?.id);
+
+      return deleteFactura;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const addFacturas = async (facturasScheme) => {
   try {
     if (pb?.authStore?.isValid) {
