@@ -47,7 +47,7 @@ const AhorrosTabla = ({
       ahorrosScheme.categorias !== ""
     ) {
       addAhorros(ahorrosScheme);
-      /* location.reload("/dashboard"); */
+      location.reload("/dashboard");
       setAhorrosScheme({
         ahorros: "",
         presupuesto: 0,

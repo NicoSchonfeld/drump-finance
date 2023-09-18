@@ -312,8 +312,10 @@ export const createFacturas = async () => {
         (item) => item.idUser == pb?.authStore?.model?.id
       );
 
+      const resta = onlyPresAuthUser[0]?.total - totalPresupuestoFacturas;
+
       const data = {
-        total: onlyPresAuthUser[0]?.total - totalPresupuestoFacturas,
+        total: resta,
         idUser: pb?.authStore?.model?.id,
       };
 
@@ -375,8 +377,11 @@ export const editFacturas = async () => {
         (item) => item.idUser == pb?.authStore?.model?.id
       );
 
+      const resta =
+        onlyPresAuthUser[0]?.total - onlyFacturasAuthUser[0]?.presupuesto;
+
       const data = {
-        total: onlyPresAuthUser[0]?.total - totalFacturas,
+        total: resta,
         idUser: pb?.authStore?.model?.id,
       };
 
@@ -455,18 +460,16 @@ export const createGastos = async () => {
         (item) => item.idUser == pb?.authStore?.model?.id
       );
 
+      const resta = onlyPresAuthUser[0]?.total - totalAmount;
+
       const data = {
-        total: onlyPresAuthUser[0]?.total - totalAmount,
+        total: resta,
         idUser: pb?.authStore?.model?.id,
       };
 
       const record = await pb
         .collection("total_presupuesto_por_asignar")
         .update(onlyPresAuthUser[0]?.id, data);
-
-      console.log(
-        JSON.stringify(record, null, 2) + " <<<<<<<<<<<<<<<<<<<<<<<<"
-      );
 
       return saveTotalGastos;
     }
@@ -522,8 +525,11 @@ export const editGastos = async () => {
         (item) => item.idUser == pb?.authStore?.model?.id
       );
 
+      const resta =
+        onlyPresAuthUser[0]?.total - onlyGastosAuthUser[0]?.presupuesto;
+
       const data = {
-        total: onlyPresAuthUser[0]?.total - totalAmount,
+        total: resta,
         idUser: pb?.authStore?.model?.id,
       };
 
@@ -600,8 +606,10 @@ export const createAhorros = async () => {
         (item) => item.idUser == pb?.authStore?.model?.id
       );
 
+      const resta = onlyPresAuthUser[0]?.total - totalAmount;
+
       const data = {
-        total: onlyPresAuthUser[0]?.total - totalAmount,
+        total: resta,
         idUser: pb?.authStore?.model?.id,
       };
 
@@ -663,8 +671,11 @@ export const editAhorros = async () => {
         (item) => item.idUser == pb?.authStore?.model?.id
       );
 
+      const resta =
+        onlyPresAuthUser[0]?.total - onlyAhorrosAuthUser[0]?.presupuesto;
+
       const data = {
-        total: onlyPresAuthUser[0]?.total - totalAmount,
+        total: resta,
         idUser: pb?.authStore?.model?.id,
       };
 
