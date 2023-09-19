@@ -86,9 +86,7 @@ const PresupuestoTotal = ({
                   <FaMoneyBillWave className="text-xl" />
                 </div>
                 <Progress
-                  label={`Necesidades: $${
-                    method50_30_20?.total_50?.toFixed(2) ?? 0
-                  }`}
+                  label={`Necesidades: $${method50_30_20?.total_50 ?? 0}`}
                   size="sm"
                   value={presupuestoPorAsignar /* * 0.5 */}
                   maxValue={method50_30_20?.total_50}

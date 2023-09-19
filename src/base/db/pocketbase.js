@@ -455,6 +455,83 @@ export const deleteFacturas = async (dato) => {
   }
 };
 
+export const updateFacturas = async (idFactura, facturasScheme) => {
+  try {
+    if (pb?.authStore?.isValid) {
+      const facturaAnterior = await pb
+        .collection("facturas")
+        .getOne(idFactura, {
+          expand: "relField1,relField2.subRelField",
+        });
+
+      /* la nueva factura es mayor a la que estaba anterior */
+      if (facturaAnterior?.presupuesto < Number(facturasScheme?.presupuesto)) {
+        console.log("Mayor");
+      }
+
+      /* la nueva factura es menor a la que estaba anterior */
+      if (facturaAnterior?.presupuesto > Number(facturasScheme?.presupuesto)) {
+        // Se actualiza la factura con el nuevo presupuesto
+
+        const facturaUpdate = await pb
+          .collection("facturas")
+          .update(idFactura, facturasScheme);
+
+        const nuevaResta =
+          facturaAnterior?.presupuesto - Number(facturasScheme?.presupuesto); // 15.000 - 5.000 = 10.000
+
+        // El resultado de esta facturasScheme?.presupuesto se tiene que restar al total de facturas
+        const totalFacturas = await pb
+          .collection("total_facturas")
+          .getFullList({
+            sort: "-created",
+          });
+
+        const onlyTotalFacUserAuth = totalFacturas.filter(
+          (item) => item?.idUser == pb?.authStore?.model?.id
+        );
+
+        const restaTotalFacturas = onlyTotalFacUserAuth[0]?.total - nuevaResta;
+
+        const dataRestaTotalFacturas = {
+          total: restaTotalFacturas,
+          idUser: pb?.authStore?.model?.id,
+        };
+
+        await pb
+          .collection("total_facturas")
+          .update(onlyTotalFacUserAuth[0]?.id, dataRestaTotalFacturas);
+
+        // El resultado de esta nuevaResta se tiene que sumar al presupuesto por asignar
+        const allPresupuestos = await pb
+          .collection("total_presupuesto_por_asignar")
+          .getFullList({
+            sort: "-created",
+          });
+
+        const onlyPresupuestoUserAuth = allPresupuestos.filter(
+          (item) => item?.idUser == pb?.authStore?.model?.id
+        );
+
+        const nuevaSuma = onlyPresupuestoUserAuth[0]?.total + nuevaResta;
+
+        const dataUpdatePresupuesto = {
+          total: nuevaSuma,
+          idUser: pb?.authStore?.model?.id,
+        };
+
+        await pb
+          .collection("total_presupuesto_por_asignar")
+          .update(onlyPresupuestoUserAuth[0]?.id, dataUpdatePresupuesto);
+
+        return facturaUpdate;
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const addFacturas = async (facturasScheme) => {
   try {
     if (pb?.authStore?.isValid) {

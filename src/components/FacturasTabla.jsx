@@ -1,4 +1,9 @@
-import { addFacturas, deleteFacturas, pb } from "@/base/db/pocketbase";
+import {
+  addFacturas,
+  deleteFacturas,
+  pb,
+  updateFacturas,
+} from "@/base/db/pocketbase";
 import { formatNumber } from "@/base/formatNumber";
 import {
   Button,
@@ -78,6 +83,12 @@ const FacturasTabla = ({
       idUser: pb?.authStore?.model?.id,
     });
     setIdUpdateScheme(id);
+  };
+
+  const handleSubmitUpdate = (e) => {
+    e?.preventDefault();
+
+    updateFacturas(idUpdateScheme, facturaScheme);
   };
 
   const returnTipos = (tipo) => {
@@ -260,7 +271,7 @@ const FacturasTabla = ({
                 {editState ? (
                   <>
                     <Button
-                      onClick={() => alert("edit")}
+                      onClick={() => handleSubmitUpdate()}
                       type="button"
                       color="primary"
                       variant="solid"
@@ -281,6 +292,7 @@ const FacturasTabla = ({
                           idUser: pb?.authStore?.model?.id,
                         });
                         setEditState(false);
+                        setIdUpdateScheme("");
                       }}
                       type="button"
                       color="danger"
