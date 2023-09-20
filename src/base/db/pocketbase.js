@@ -466,7 +466,59 @@ export const updateFacturas = async (idFactura, facturasScheme) => {
 
       /* la nueva factura es mayor a la que estaba anterior */
       if (facturaAnterior?.presupuesto < Number(facturasScheme?.presupuesto)) {
-        console.log("Mayor");
+        // Se actualiza la factura con el nuevo presupuesto
+
+        const facturaUpdate = await pb
+          .collection("facturas")
+          .update(idFactura, facturasScheme);
+
+        const nuevaResta =
+          Number(facturasScheme?.presupuesto) - facturaAnterior?.presupuesto; // 7.000 - 5.000 = 2.000
+
+        const totalFacturas = await pb
+          .collection("total_facturas")
+          .getFullList({
+            sort: "-created",
+          });
+
+        const onlyTotalFacUserAuth = totalFacturas.filter(
+          (item) => item?.idUser == pb?.authStore?.model?.id
+        );
+
+        const sumaTotalFacturas = onlyTotalFacUserAuth[0]?.total + nuevaResta;
+
+        const dataSumaTotalFacturas = {
+          total: sumaTotalFacturas,
+          idUser: pb?.authStore?.model?.id,
+        };
+
+        await pb
+          .collection("total_facturas")
+          .update(onlyTotalFacUserAuth[0]?.id, dataSumaTotalFacturas);
+
+        // El resultado de esta nuevaResta se tiene que sumar al presupuesto por asignar
+        const allPresupuestos = await pb
+          .collection("total_presupuesto_por_asignar")
+          .getFullList({
+            sort: "-created",
+          });
+
+        const onlyPresupuestoUserAuth = allPresupuestos.filter(
+          (item) => item?.idUser == pb?.authStore?.model?.id
+        );
+
+        const restaPresupuesto = onlyPresupuestoUserAuth[0]?.total - nuevaResta;
+
+        const dataUpdatePresupuesto = {
+          total: restaPresupuesto,
+          idUser: pb?.authStore?.model?.id,
+        };
+
+        await pb
+          .collection("total_presupuesto_por_asignar")
+          .update(onlyPresupuestoUserAuth[0]?.id, dataUpdatePresupuesto);
+
+        return facturaUpdate;
       }
 
       /* la nueva factura es menor a la que estaba anterior */
