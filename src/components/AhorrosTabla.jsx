@@ -1,8 +1,18 @@
-import { addAhorros, addGastos, pb } from "@/base/db/pocketbase";
+import {
+  addAhorros,
+  addGastos,
+  deleteAhorros,
+  pb,
+  updateAhorros,
+} from "@/base/db/pocketbase";
 import { formatNumber } from "@/base/formatNumber";
 import {
   Button,
   Chip,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Input,
   Select,
   SelectItem,
@@ -14,7 +24,9 @@ import {
   TableRow,
   Tooltip,
 } from "@nextui-org/react";
-import React from "react";
+import React, { useState } from "react";
+import { AiOutlineClose, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import { SlOptionsVertical } from "react-icons/sl";
 
 const AhorrosTabla = ({
   tipos,
@@ -30,6 +42,8 @@ const AhorrosTabla = ({
     categorias: "",
     idUser: pb?.authStore?.model?.id,
   });
+  const [editState, setEditState] = useState(false);
+  const [idUpdateScheme, setIdUpdateScheme] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,7 +52,7 @@ const AhorrosTabla = ({
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e?.preventDefault();
 
     if (
       ahorrosScheme.ahorros !== "" &&
@@ -57,6 +71,40 @@ const AhorrosTabla = ({
       });
     } else {
       console.log("LLenar campos");
+    }
+  };
+
+  const updateScheme = (dato, id) => {
+    setAhorrosScheme({
+      ahorros: dato?.ahorros,
+      presupuesto: dato?.presupuesto,
+      tipos: dato?.tipos,
+      categorias: dato?.categorias,
+      idUser: pb?.authStore?.model?.id,
+    });
+    setIdUpdateScheme(id);
+  };
+
+  const handleSubmitUpdate = (e) => {
+    e?.preventDefault();
+
+    if (
+      ahorrosScheme?.ahorros !== "" &&
+      ahorrosScheme?.presupuesto > 0 &&
+      ahorrosScheme?.tipos !== "" &&
+      ahorrosScheme?.categorias !== ""
+    ) {
+      updateAhorros(idUpdateScheme, ahorrosScheme);
+      location.reload("/dashboard");
+      setAhorrosScheme({
+        ahorros: "",
+        presupuesto: 0,
+        tipos: "",
+        categorias: "",
+        idUser: pb?.authStore?.model?.id,
+      });
+    } else {
+      console.log("llenar campos");
     }
   };
 
@@ -165,7 +213,7 @@ const AhorrosTabla = ({
             <p className="text-sm text-[#70907A]">Añade tus Ahorros</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="flex items-center gap-5">
+          <form className="flex items-center gap-5">
             <Input
               type="text"
               label="Ahorros"
@@ -234,16 +282,57 @@ const AhorrosTabla = ({
                 </Button>
               </Tooltip>
             ) : (
-              <Button
-                type="submit"
-                color="primary"
-                variant="solid"
-                isIconOnly
-                size="lg"
-                radius="sm"
-              >
-                +
-              </Button>
+              <>
+                {editState ? (
+                  <>
+                    <Button
+                      onClick={() => handleSubmitUpdate()}
+                      type="button"
+                      color="primary"
+                      variant="solid"
+                      isIconOnly
+                      size="lg"
+                      radius="sm"
+                    >
+                      <AiOutlineEdit />
+                    </Button>
+
+                    <Button
+                      onClick={() => {
+                        setAhorrosScheme({
+                          ahorros: "",
+                          presupuesto: 0,
+                          tipos: "",
+                          categorias: "",
+                          idUser: pb?.authStore?.model?.id,
+                        });
+                        setEditState(false);
+                        setIdUpdateScheme("");
+                      }}
+                      type="button"
+                      color="danger"
+                      variant="solid"
+                      isIconOnly
+                      size="lg"
+                      radius="sm"
+                    >
+                      <AiOutlineClose />
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    onClick={() => handleSubmit()}
+                    type="button"
+                    color="primary"
+                    variant="solid"
+                    isIconOnly
+                    size="lg"
+                    radius="sm"
+                  >
+                    +
+                  </Button>
+                )}
+              </>
             )}
           </form>
 
@@ -291,7 +380,13 @@ const AhorrosTabla = ({
                           aria-label="Static Actions"
                           color="primary"
                         >
-                          <DropdownItem key="Editar">
+                          <DropdownItem
+                            key="Editar"
+                            onClick={() => {
+                              updateScheme(dato, dato?.id);
+                              setEditState(true);
+                            }}
+                          >
                             <div className="flex items-center gap-3">
                               <AiOutlineEdit /> Editar
                             </div>
@@ -300,6 +395,10 @@ const AhorrosTabla = ({
                             key="Eliminar"
                             className="text-danger"
                             color="danger"
+                            onClick={() => {
+                              deleteAhorros(dato);
+                              location.reload("/dashboard");
+                            }}
                           >
                             <div className="flex items-center gap-3">
                               <AiOutlineDelete />

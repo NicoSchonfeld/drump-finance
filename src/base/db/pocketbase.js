@@ -795,7 +795,7 @@ export const updateGastos = async (idGasto, gastosScheme) => {
         expand: "relField1,relField2.subRelField",
       });
 
-      /* el nuevo gasto es mayor al que estaba anterior */
+      /* el nuevo gasto es mayor al anterior */
       if (gastoAnterior?.presupuesto < Number(gastosScheme?.presupuesto)) {
         // Se actualiza la gastos con el nuevo presupuesto
 
@@ -850,7 +850,7 @@ export const updateGastos = async (idGasto, gastosScheme) => {
         return gastoUpdate;
       }
 
-      /* el nuevo gasto es menor al que estaba anterior */
+      /* el nuevo gasto es menor al anterior */
       if (gastoAnterior?.presupuesto > Number(gastosScheme?.presupuesto)) {
         // Se actualiza el gasto con el nuevo presupuesto
 
@@ -1051,6 +1051,186 @@ export const editAhorros = async () => {
         .update(onlyPresAuthUser[0]?.id, data);
 
       return updateTotalGastos;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteAhorros = async (dato) => {
+  try {
+    if (pb?.authStore?.isValid) {
+      const allPresupuestos = await pb
+        .collection("total_presupuesto_por_asignar")
+        .getFullList({
+          sort: "-created",
+        });
+
+      const onlyPresupuestoAuthUser = allPresupuestos.filter(
+        (item) => item?.idUser == pb?.authStore?.model?.id
+      );
+
+      const sumaDePres = onlyPresupuestoAuthUser[0]?.total + dato?.presupuesto;
+
+      const sumaDePresupuesto = {
+        total: sumaDePres,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      await pb
+        .collection("total_presupuesto_por_asignar")
+        .update(onlyPresupuestoAuthUser[0]?.id, sumaDePresupuesto);
+
+      /* Actualizar Total de ahorros */
+      const allTotalAhorros = await pb.collection("total_ahorros").getFullList({
+        sort: "-created",
+      });
+
+      const onlyTotalAhorrosAuthUser = allTotalAhorros.filter(
+        (item) => item?.idUser == pb?.authStore?.model?.id
+      );
+
+      const restaDeTotalAhorros =
+        onlyTotalAhorrosAuthUser[0]?.total - dato?.presupuesto;
+
+      const restaDelTotalAhorros = {
+        total: restaDeTotalAhorros,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      await pb
+        .collection("total_ahorros")
+        .update(onlyTotalAhorrosAuthUser[0]?.id, restaDelTotalAhorros);
+
+      /* Eliminar gastos */
+      const deleteAhorros = await pb.collection("ahorros").delete(dato?.id);
+
+      return deleteAhorros;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateAhorros = async (idAhorro, ahorrosScheme) => {
+  try {
+    if (pb?.authStore?.isValid) {
+      const ahorroAnterior = await pb.collection("ahorros").getOne(idAhorro, {
+        expand: "relField1,relField2.subRelField",
+      });
+
+      /* el nuevo ahorro es mayor al anterior */
+      if (ahorroAnterior?.presupuesto < Number(ahorrosScheme?.presupuesto)) {
+        // Se actualiza la ahorros con el nuevo presupuesto
+
+        const ahorroUpdate = await pb
+          .collection("ahorros")
+          .update(idAhorro, ahorrosScheme);
+
+        const nuevaResta =
+          Number(ahorrosScheme?.presupuesto) - ahorroAnterior?.presupuesto; // 7.000 - 5.000 = 2.000
+
+        const totalAhorros = await pb.collection("total_ahorros").getFullList({
+          sort: "-created",
+        });
+
+        const onlyTotalAhorrosUserAuth = totalAhorros.filter(
+          (item) => item?.idUser == pb?.authStore?.model?.id
+        );
+
+        const sumaTotalAhorros =
+          onlyTotalAhorrosUserAuth[0]?.total + nuevaResta;
+
+        const dataSumaTotalAhorros = {
+          total: sumaTotalAhorros,
+          idUser: pb?.authStore?.model?.id,
+        };
+
+        await pb
+          .collection("total_ahorros")
+          .update(onlyTotalAhorrosUserAuth[0]?.id, dataSumaTotalAhorros);
+
+        // El resultado de esta nuevaResta se tiene que sumar al presupuesto por asignar
+        const allPresupuestos = await pb
+          .collection("total_presupuesto_por_asignar")
+          .getFullList({
+            sort: "-created",
+          });
+
+        const onlyPresupuestoUserAuth = allPresupuestos.filter(
+          (item) => item?.idUser == pb?.authStore?.model?.id
+        );
+
+        const restaPresupuesto = onlyPresupuestoUserAuth[0]?.total - nuevaResta;
+
+        const dataUpdatePresupuesto = {
+          total: restaPresupuesto,
+          idUser: pb?.authStore?.model?.id,
+        };
+
+        await pb
+          .collection("total_presupuesto_por_asignar")
+          .update(onlyPresupuestoUserAuth[0]?.id, dataUpdatePresupuesto);
+
+        return ahorroUpdate;
+      }
+
+      /* el nuevo ahorro es menor al anterior */
+      if (ahorroAnterior?.presupuesto > Number(ahorrosScheme?.presupuesto)) {
+        // Se actualiza el gasto con el nuevo presupuesto
+
+        const ahorroUpdate = await pb
+          .collection("ahorros")
+          .update(idAhorro, ahorrosScheme);
+
+        const nuevaResta =
+          ahorroAnterior?.presupuesto - Number(ahorrosScheme?.presupuesto); // 15.000 - 5.000 = 10.000
+
+        // El resultado de ahorrosScheme?.presupuesto se tiene que restar al total de ahorros
+        const totalAhorros = await pb.collection("total_ahorros").getFullList({
+          sort: "-created",
+        });
+
+        const onlyTotalAhorrosUserAuth = totalAhorros.filter(
+          (item) => item?.idUser == pb?.authStore?.model?.id
+        );
+
+        const restaTotalAhorros =
+          onlyTotalAhorrosUserAuth[0]?.total - nuevaResta;
+
+        const dataRestaTotalAhorros = {
+          total: restaTotalAhorros,
+          idUser: pb?.authStore?.model?.id,
+        };
+
+        await pb
+          .collection("total_ahorros")
+          .update(onlyTotalAhorrosUserAuth[0]?.id, dataRestaTotalAhorros);
+
+        // El resultado de esta nuevaResta se tiene que sumar al presupuesto por asignar
+        const allPresupuestos = await pb
+          .collection("total_presupuesto_por_asignar")
+          .getFullList({
+            sort: "-created",
+          });
+
+        const onlyPresupuestoUserAuth = allPresupuestos.filter(
+          (item) => item?.idUser == pb?.authStore?.model?.id
+        );
+
+        const nuevaSuma = onlyPresupuestoUserAuth[0]?.total + nuevaResta;
+
+        const dataUpdatePresupuesto = {
+          total: nuevaSuma,
+          idUser: pb?.authStore?.model?.id,
+        };
+
+        await pb
+          .collection("total_presupuesto_por_asignar")
+          .update(onlyPresupuestoUserAuth[0]?.id, dataUpdatePresupuesto);
+
+        return ahorroUpdate;
+      }
     }
   } catch (error) {
     console.log(error);
