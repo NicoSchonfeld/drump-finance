@@ -1,8 +1,17 @@
-import { addGastos, pb } from "@/base/db/pocketbase";
+import {
+  addGastos,
+  deleteGastos,
+  pb,
+  updateGastos,
+} from "@/base/db/pocketbase";
 import { formatNumber } from "@/base/formatNumber";
 import {
   Button,
   Chip,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Input,
   Select,
   SelectItem,
@@ -14,7 +23,9 @@ import {
   TableRow,
   Tooltip,
 } from "@nextui-org/react";
-import React from "react";
+import React, { useState } from "react";
+import { AiOutlineClose, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import { SlOptionsVertical } from "react-icons/sl";
 
 const GastosTabla = ({
   tipos,
@@ -23,22 +34,24 @@ const GastosTabla = ({
   totalGastos,
   presupuestoPorAsignar,
 }) => {
-  const [gastosScheme, setgastosScheme] = React.useState({
+  const [gastosScheme, setGastosScheme] = React.useState({
     gastos: "",
     presupuesto: 0,
     tipos: "",
     categorias: "",
     idUser: pb?.authStore?.model?.id,
   });
+  const [editState, setEditState] = useState(false);
+  const [idUpdateScheme, setIdUpdateScheme] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setgastosScheme({ ...gastosScheme, [name]: value });
+    setGastosScheme({ ...gastosScheme, [name]: value });
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e?.preventDefault();
 
     if (
       gastosScheme.gastos !== "" &&
@@ -48,7 +61,41 @@ const GastosTabla = ({
     ) {
       addGastos(gastosScheme);
       location.reload("/dashboard");
-      setgastosScheme({
+      setGastosScheme({
+        gastos: "",
+        presupuesto: 0,
+        tipos: "",
+        categorias: "",
+        idUser: pb?.authStore?.model?.id,
+      });
+    } else {
+      console.log("LLenar campos");
+    }
+  };
+
+  const updateScheme = (dato, id) => {
+    setGastosScheme({
+      gastos: dato?.gastos,
+      presupuesto: dato?.presupuesto,
+      tipos: dato?.tipo,
+      categorias: dato?.categorias,
+      idUser: pb?.authStore?.model?.id,
+    });
+    setIdUpdateScheme(id);
+  };
+
+  const handleSubmitUpdate = (e) => {
+    e?.preventDefault();
+
+    if (
+      gastosScheme?.gastos !== "" &&
+      gastosScheme?.presupuesto > 0 &&
+      gastosScheme?.tipos !== "" &&
+      gastosScheme?.categorias !== ""
+    ) {
+      updateGastos(idUpdateScheme, gastosScheme);
+      location.reload("/dashboard");
+      setGastosScheme({
         gastos: "",
         presupuesto: 0,
         tipos: "",
@@ -165,7 +212,7 @@ const GastosTabla = ({
             <p className="text-sm text-[#70907A]">Añade tus gastos</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="flex items-center gap-5">
+          <form className="flex items-center gap-5">
             <Input
               type="text"
               label="Gastos"
@@ -234,16 +281,57 @@ const GastosTabla = ({
                 </Button>
               </Tooltip>
             ) : (
-              <Button
-                type="submit"
-                color="primary"
-                variant="solid"
-                isIconOnly
-                size="lg"
-                radius="sm"
-              >
-                +
-              </Button>
+              <>
+                {editState ? (
+                  <>
+                    <Button
+                      onClick={() => handleSubmitUpdate()}
+                      type="button"
+                      color="primary"
+                      variant="solid"
+                      isIconOnly
+                      size="lg"
+                      radius="sm"
+                    >
+                      <AiOutlineEdit />
+                    </Button>
+
+                    <Button
+                      onClick={() => {
+                        setGastosScheme({
+                          gastos: "",
+                          presupuesto: 0,
+                          tipos: "",
+                          categorias: "",
+                          idUser: pb?.authStore?.model?.id,
+                        });
+                        setEditState(false);
+                        setIdUpdateScheme("");
+                      }}
+                      type="button"
+                      color="danger"
+                      variant="solid"
+                      isIconOnly
+                      size="lg"
+                      radius="sm"
+                    >
+                      <AiOutlineClose />
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    onClick={() => handleSubmit()}
+                    type="button"
+                    color="primary"
+                    variant="solid"
+                    isIconOnly
+                    size="lg"
+                    radius="sm"
+                  >
+                    +
+                  </Button>
+                )}
+              </>
             )}
           </form>
 
@@ -291,7 +379,13 @@ const GastosTabla = ({
                           aria-label="Static Actions"
                           color="primary"
                         >
-                          <DropdownItem key="Editar">
+                          <DropdownItem
+                            key="Editar"
+                            onClick={() => {
+                              updateScheme(dato, dato?.id);
+                              setEditState(true);
+                            }}
+                          >
                             <div className="flex items-center gap-3">
                               <AiOutlineEdit /> Editar
                             </div>
@@ -300,6 +394,10 @@ const GastosTabla = ({
                             key="Eliminar"
                             className="text-danger"
                             color="danger"
+                            onClick={() => {
+                              deleteGastos(dato);
+                              location.reload("/dashboard");
+                            }}
                           >
                             <div className="flex items-center gap-3">
                               <AiOutlineDelete />

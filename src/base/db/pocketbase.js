@@ -417,7 +417,7 @@ export const deleteFacturas = async (dato) => {
         idUser: pb?.authStore?.model?.id,
       };
 
-      const saveNewPresupuesto = await pb
+      await pb
         .collection("total_presupuesto_por_asignar")
         .update(onlyPresupuestoAuthUser[0]?.id, sumaDePresupuesto);
 
@@ -726,6 +726,185 @@ export const editGastos = async () => {
         .update(onlyPresAuthUser[0]?.id, data);
 
       return updateTotalGastos;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteGastos = async (dato) => {
+  try {
+    if (pb?.authStore?.model?.id) {
+      const allPresupuestos = await pb
+        .collection("total_presupuesto_por_asignar")
+        .getFullList({
+          sort: "-created",
+        });
+
+      const onlyPresupuestoAuthUser = allPresupuestos.filter(
+        (item) => item?.idUser == pb?.authStore?.model?.id
+      );
+
+      const sumaDePres = onlyPresupuestoAuthUser[0]?.total + dato?.presupuesto;
+
+      const sumaDePresupuesto = {
+        total: sumaDePres,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      await pb
+        .collection("total_presupuesto_por_asignar")
+        .update(onlyPresupuestoAuthUser[0]?.id, sumaDePresupuesto);
+
+      /* Actualizar Total de gastos */
+      const allTotalGastos = await pb.collection("total_gastos").getFullList({
+        sort: "-created",
+      });
+
+      const onlyTotalGasAuthUser = allTotalGastos.filter(
+        (item) => item?.idUser == pb?.authStore?.model?.id
+      );
+
+      const restaDeTotalGastos =
+        onlyTotalGasAuthUser[0]?.total - dato?.presupuesto;
+
+      const restaDelTotalGas = {
+        total: restaDeTotalGastos,
+        idUser: pb?.authStore?.model?.id,
+      };
+
+      await pb
+        .collection("total_gastos")
+        .update(onlyTotalGasAuthUser[0]?.id, restaDelTotalGas);
+
+      /* Eliminar gastos */
+
+      const deleteGastos = await pb.collection("gastos").delete(dato?.id);
+
+      return deleteGastos;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateGastos = async (idGasto, gastosScheme) => {
+  try {
+    if (pb?.authStore?.isValid) {
+      const gastoAnterior = await pb.collection("gastos").getOne(idGasto, {
+        expand: "relField1,relField2.subRelField",
+      });
+
+      /* el nuevo gasto es mayor al que estaba anterior */
+      if (gastoAnterior?.presupuesto < Number(gastosScheme?.presupuesto)) {
+        // Se actualiza la gastos con el nuevo presupuesto
+
+        const gastoUpdate = await pb
+          .collection("gastos")
+          .update(idGasto, gastosScheme);
+
+        const nuevaResta =
+          Number(gastosScheme?.presupuesto) - gastoAnterior?.presupuesto; // 7.000 - 5.000 = 2.000
+
+        const totalGastos = await pb.collection("total_gastos").getFullList({
+          sort: "-created",
+        });
+
+        const onlyTotalGasUserAuth = totalGastos.filter(
+          (item) => item?.idUser == pb?.authStore?.model?.id
+        );
+
+        const sumaTotalGastos = onlyTotalGasUserAuth[0]?.total + nuevaResta;
+
+        const dataSumaTotalGastos = {
+          total: sumaTotalGastos,
+          idUser: pb?.authStore?.model?.id,
+        };
+
+        await pb
+          .collection("total_gastos")
+          .update(onlyTotalGasUserAuth[0]?.id, dataSumaTotalGastos);
+
+        // El resultado de esta nuevaResta se tiene que sumar al presupuesto por asignar
+        const allPresupuestos = await pb
+          .collection("total_presupuesto_por_asignar")
+          .getFullList({
+            sort: "-created",
+          });
+
+        const onlyPresupuestoUserAuth = allPresupuestos.filter(
+          (item) => item?.idUser == pb?.authStore?.model?.id
+        );
+
+        const restaPresupuesto = onlyPresupuestoUserAuth[0]?.total - nuevaResta;
+
+        const dataUpdatePresupuesto = {
+          total: restaPresupuesto,
+          idUser: pb?.authStore?.model?.id,
+        };
+
+        await pb
+          .collection("total_presupuesto_por_asignar")
+          .update(onlyPresupuestoUserAuth[0]?.id, dataUpdatePresupuesto);
+
+        return gastoUpdate;
+      }
+
+      /* el nuevo gasto es menor al que estaba anterior */
+      if (gastoAnterior?.presupuesto > Number(gastosScheme?.presupuesto)) {
+        // Se actualiza el gasto con el nuevo presupuesto
+
+        const gastoUpdate = await pb
+          .collection("gastos")
+          .update(idGasto, gastosScheme);
+
+        const nuevaResta =
+          gastoAnterior?.presupuesto - Number(gastosScheme?.presupuesto); // 15.000 - 5.000 = 10.000
+
+        // El resultado de gastosScheme?.presupuesto se tiene que restar al total de gastos
+        const totalGastos = await pb.collection("total_gastos").getFullList({
+          sort: "-created",
+        });
+
+        const onlyTotalGasUserAuth = totalGastos.filter(
+          (item) => item?.idUser == pb?.authStore?.model?.id
+        );
+
+        const restaTotalGastos = onlyTotalGasUserAuth[0]?.total - nuevaResta;
+
+        const dataRestaTotalGastos = {
+          total: restaTotalGastos,
+          idUser: pb?.authStore?.model?.id,
+        };
+
+        await pb
+          .collection("total_gastos")
+          .update(onlyTotalGasUserAuth[0]?.id, dataRestaTotalGastos);
+
+        // El resultado de esta nuevaResta se tiene que sumar al presupuesto por asignar
+        const allPresupuestos = await pb
+          .collection("total_presupuesto_por_asignar")
+          .getFullList({
+            sort: "-created",
+          });
+
+        const onlyPresupuestoUserAuth = allPresupuestos.filter(
+          (item) => item?.idUser == pb?.authStore?.model?.id
+        );
+
+        const nuevaSuma = onlyPresupuestoUserAuth[0]?.total + nuevaResta;
+
+        const dataUpdatePresupuesto = {
+          total: nuevaSuma,
+          idUser: pb?.authStore?.model?.id,
+        };
+
+        await pb
+          .collection("total_presupuesto_por_asignar")
+          .update(onlyPresupuestoUserAuth[0]?.id, dataUpdatePresupuesto);
+
+        return gastoUpdate;
+      }
     }
   } catch (error) {
     console.log(error);

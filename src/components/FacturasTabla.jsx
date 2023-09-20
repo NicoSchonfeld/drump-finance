@@ -88,7 +88,24 @@ const FacturasTabla = ({
   const handleSubmitUpdate = (e) => {
     e?.preventDefault();
 
-    updateFacturas(idUpdateScheme, facturaScheme);
+    if (
+      facturaScheme?.facturas !== "" &&
+      facturaScheme?.presupuesto > 0 &&
+      facturaScheme?.tipos !== "" &&
+      facturaScheme?.categorias !== ""
+    ) {
+      updateFacturas(idUpdateScheme, facturaScheme);
+      location.reload("/dashboard");
+      setFacturaScheme({
+        facturas: "",
+        presupuesto: 0,
+        tipos: "",
+        categorias: "",
+        idUser: pb?.authStore?.model?.id,
+      });
+    } else {
+      console.log("LLenar campos");
+    }
   };
 
   const returnTipos = (tipo) => {
