@@ -248,6 +248,77 @@ export const editTotalRevenue = async () => {
   }
 };
 
+export const deleteRevenue = async (dato) => {
+  try {
+    if (pb?.authStore?.isValid) {
+      /* Restar el ingreso seleccionado con el presupesto */
+
+      const allPResupuetosXAsignar = await pb
+        .collection("total_presupuesto_por_asignar")
+        .getFullList({
+          sort: "-created",
+        });
+
+      const [onlyPresupuestoAuthUser] = allPResupuetosXAsignar.filter(
+        (item) => item?.idUser == pb?.authStore?.model?.id
+      );
+
+      if (onlyPresupuestoAuthUser?.total > 0) {
+        const restaPresupuesto = onlyPresupuestoAuthUser?.total - dato?.actual;
+
+        if (restaPresupuesto > 0) {
+          const dataUpdatePresupuesto = {
+            total: restaPresupuesto,
+            idUser: pb?.authStore?.model?.id,
+          };
+
+          await pb
+            .collection("total_presupuesto_por_asignar")
+            .update(onlyPresupuestoAuthUser?.id, dataUpdatePresupuesto);
+
+          /* Eliminar ingresos de la tabla */
+          const eliminarIngreo = await pb
+            .collection("ingresos")
+            .delete(dato?.id);
+
+          /* Restar el ingreso seleccionado del total */
+          const allTotalIngresos = await pb
+            .collection("total_ingresos")
+            .getFullList({
+              sort: "-created",
+            });
+
+          const [onlyTotalIngresosAuthUser] = allTotalIngresos.filter(
+            (item) => item?.idUser == pb?.authStore?.model?.id
+          );
+
+          const restaTotalIngresos =
+            onlyTotalIngresosAuthUser?.total - dato?.actual;
+
+          const dataTotalIngresos = {
+            total: restaTotalIngresos,
+            idUser: pb?.authStore?.model?.id,
+          };
+
+          const restarTotal = await pb
+            .collection("total_ingresos")
+            .update(onlyTotalIngresosAuthUser?.id, dataTotalIngresos);
+
+          editMethod50_30_20(dato?.actual);
+        } else {
+          alert(
+            "NO SE PUEDE ELIMINAR. Agregar más ingresos o liberar tablas (HACer boton para eliminar de todas formas - se perdera el progreso)"
+          );
+        }
+      }
+
+      return eliminarIngreo;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const addRevenue = async (ingresosScheme) => {
   try {
     if (pb?.authStore?.isValid) {
