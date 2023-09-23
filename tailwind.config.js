@@ -23,7 +23,7 @@ module.exports = {
             },
             secondary: {
               DEFAULT: "#EEF8F0",
-              foreground: "##182019",
+              foreground: "#182019",
             },
             focus: "#182019",
           },

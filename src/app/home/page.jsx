@@ -49,7 +49,7 @@ const HomePage = () => {
               className="flex items-center justify-center gap-5"
             >
               <Button color="primary" radius="sm">
-                Empezár
+                Empezar
               </Button>
               <Button color="primary" radius="sm" variant="bordered">
                 Cómo usar

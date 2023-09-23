@@ -150,6 +150,8 @@ const PresupuestoTotal = ({
               isLoaded={userIsValid}
             >
               <Button
+                as={NextLink}
+                href="/dashboard/view_revenue"
                 radius="sm"
                 color="primary"
                 variant="bordered"

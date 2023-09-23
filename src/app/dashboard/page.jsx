@@ -53,6 +53,7 @@ import {
   getGastos,
   getAhorros,
   getTotalAhorros,
+  getAllRevenue,
 } from "@/base/db/pocketbase";
 import { formatNumber } from "@/base/formatNumber";
 import PresupuestoTotal from "@/components/PresupuestoTotal";

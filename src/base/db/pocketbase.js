@@ -1262,6 +1262,24 @@ export const addAhorros = async (ahorrosScheme) => {
 
 /* GET */
 
+export const getAllRevenue = async () => {
+  try {
+    if (pb?.authStore?.isValid) {
+      const allRevenue = await pb.collection("ingresos").getFullList({
+        sort: "-created",
+      });
+
+      const onlyRevenueUserAuth = allRevenue.filter(
+        (item) => item?.idUser == pb?.authStore?.model?.id
+      );
+
+      return onlyRevenueUserAuth;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getTotalRevenue = async () => {
   try {
     if (pb?.authStore?.isValid) {
