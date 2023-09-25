@@ -117,13 +117,6 @@ const ViewRevenue = () => {
                   para asignar. Libera dinero de las tablas{" "}
                   <span className="font-bold">(Facturas, Gastos, Ahorros)</span>
                   .
-                  <br />
-                  <br />
-                  Si es tu ultimo ingreso y quieres eliminarlo{" "}
-                  <span className="font-bold cursor-pointer underline">
-                    pulsa aquí
-                  </span>
-                  .
                 </motion.p>
               )}
             </div>
