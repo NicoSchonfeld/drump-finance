@@ -86,12 +86,14 @@ const PresupuestoTotal = ({
                   <FaMoneyBillWave className="text-xl" />
                 </div>
                 <Progress
-                  label={`Necesidades: $${method50_30_20?.total_50 ?? 0}`}
+                  label={`Necesidades: $${
+                    method50_30_20?.total_50?.toFixed(2) ?? 0
+                  }`}
                   size="sm"
                   value={presupuestoPorAsignar}
                   maxValue={method50_30_20?.total_50}
                   color="primary"
-                  showValueLabel={true}
+                  showValueLabel={method50_30_20?.total_50 > 0 ? true : false}
                   className="max-w-md"
                 />
               </div>
@@ -114,7 +116,7 @@ const PresupuestoTotal = ({
                   maxValue={method50_30_20?.total_30}
                   color="primary"
                   /* formatOptions={{ style: "currency", currency: "ARS" }} */
-                  showValueLabel={true}
+                  showValueLabel={method50_30_20?.total_50 > 0 ? true : false}
                   className="max-w-md"
                 />
               </div>
@@ -137,7 +139,7 @@ const PresupuestoTotal = ({
                   maxValue={method50_30_20?.total_20}
                   color="primary"
                   /* formatOptions={{ style: "currency", currency: "ARS" }} */
-                  showValueLabel={true}
+                  showValueLabel={method50_30_20?.total_50 > 0 ? true : false}
                   className="max-w-md"
                 />
               </div>
