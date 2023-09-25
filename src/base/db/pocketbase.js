@@ -47,6 +47,7 @@ export const getUser = async () => {
       const userAuth = {
         username: user.username,
         email: user.email,
+        suscripcion: user?.suscripcion,
       };
 
       return userAuth;
@@ -86,9 +87,9 @@ export const createMethod50_30_20 = async (totalAmount) => {
 export const editMethod50_30_20 = async (totalAmount) => {
   try {
     if (pb?.authStore?.isValid) {
-      const total_50 = totalAmount * 0.5;
-      const total_30 = totalAmount * 0.3;
-      const total_20 = totalAmount * 0.2;
+      const total_50 = totalAmount > 0 ? totalAmount * 0.5 : 0;
+      const total_30 = totalAmount > 0 ? totalAmount * 0.3 : 0;
+      const total_20 = totalAmount > 0 ? totalAmount * 0.2 : 0;
 
       const data = {
         total_50: total_50,
@@ -248,7 +249,7 @@ export const editTotalRevenue = async () => {
   }
 };
 
-export const deleteRevenue = async (dato) => {
+export const deleteRevenue = async (dato, setInfo) => {
   try {
     if (pb?.authStore?.isValid) {
       /* Restar el ingreso seleccionado con el presupesto */
@@ -277,7 +278,7 @@ export const deleteRevenue = async (dato) => {
             .update(onlyPresupuestoAuthUser?.id, dataUpdatePresupuesto);
 
           /* Eliminar ingresos de la tabla */
-          const eliminarIngreo = await pb
+          const eliminarIngreso = await pb
             .collection("ingresos")
             .delete(dato?.id);
 
@@ -305,14 +306,70 @@ export const deleteRevenue = async (dato) => {
             .update(onlyTotalIngresosAuthUser?.id, dataTotalIngresos);
 
           editMethod50_30_20(dato?.actual);
+          location.reload("/dashboard/view_revenue");
+
+          return eliminarIngreso;
         } else {
-          alert(
-            "NO SE PUEDE ELIMINAR. Agregar más ingresos o liberar tablas (HACer boton para eliminar de todas formas - se perdera el progreso)"
-          );
+          if (onlyPresupuestoAuthUser?.total == dato?.actual) {
+            /* Eliminar ultimo ingreso de la tabla */
+            const eliminarIngreso = await pb
+              .collection("ingresos")
+              .delete(dato?.id);
+
+            const allPResupuetosXAsignar = await pb
+              .collection("total_presupuesto_por_asignar")
+              .getFullList({
+                sort: "-created",
+              });
+
+            const [onlyPresupuestoAuthUser] = allPResupuetosXAsignar.filter(
+              (item) => item?.idUser == pb?.authStore?.model?.id
+            );
+
+            const restaPresupuesto =
+              onlyPresupuestoAuthUser?.total - dato?.actual;
+
+            const dataUpdatePresupuesto = {
+              total: restaPresupuesto,
+              idUser: pb?.authStore?.model?.id,
+            };
+
+            await pb
+              .collection("total_presupuesto_por_asignar")
+              .update(onlyPresupuestoAuthUser?.id, dataUpdatePresupuesto);
+
+            /* Restar el ingreso seleccionado del total */
+            const allTotalIngresos = await pb
+              .collection("total_ingresos")
+              .getFullList({
+                sort: "-created",
+              });
+
+            const [onlyTotalIngresosAuthUser] = allTotalIngresos.filter(
+              (item) => item?.idUser == pb?.authStore?.model?.id
+            );
+
+            const restaTotalIngresos =
+              onlyTotalIngresosAuthUser?.total - dato?.actual;
+
+            const dataTotalIngresos = {
+              total: restaTotalIngresos,
+              idUser: pb?.authStore?.model?.id,
+            };
+
+            const restarTotal = await pb
+              .collection("total_ingresos")
+              .update(onlyTotalIngresosAuthUser?.id, dataTotalIngresos);
+
+            editMethod50_30_20(0);
+            location.reload("/dashboard/view_revenue");
+
+            return eliminarIngreso;
+          } else {
+            setInfo(true);
+          }
         }
       }
-
-      return eliminarIngreo;
     }
   } catch (error) {
     console.log(error);

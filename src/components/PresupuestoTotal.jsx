@@ -88,10 +88,9 @@ const PresupuestoTotal = ({
                 <Progress
                   label={`Necesidades: $${method50_30_20?.total_50 ?? 0}`}
                   size="sm"
-                  value={presupuestoPorAsignar /* * 0.5 */}
+                  value={presupuestoPorAsignar}
                   maxValue={method50_30_20?.total_50}
                   color="primary"
-                  /* formatOptions={{ style: "currency", currency: "ARG" }} */
                   showValueLabel={true}
                   className="max-w-md"
                 />

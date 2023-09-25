@@ -25,6 +25,7 @@ import {
 } from "@nextui-org/react";
 import React, { useState } from "react";
 import { AiOutlineClose, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import { useRouter } from "next/navigation";
 
 import { SlOptionsVertical } from "react-icons/sl";
 
@@ -35,6 +36,8 @@ const FacturasTabla = ({
   totalFacturas,
   presupuestoPorAsignar,
 }) => {
+  const route = useRouter();
+
   const [facturaScheme, setFacturaScheme] = React.useState({
     facturas: "",
     presupuesto: 0,

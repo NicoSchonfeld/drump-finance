@@ -194,7 +194,7 @@ const Dashboard = () => {
             presupuestoPorAsignar={presupuestoPorAsignar}
           />
 
-          <Ahorros />
+          <Ahorros totalAhorros={totalAhorros} />
 
           <TotalGastos
             totalFacturas={totalFacturas}
