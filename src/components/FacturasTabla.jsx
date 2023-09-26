@@ -209,15 +209,15 @@ const FacturasTabla = ({
 
   return (
     <>
-      <div className="col-span-12 text-[#202b21] bg-white  shadow-md rounded-md">
+      <div className="col-span-1 lg:col-span-12 text-[#202b21] bg-white overflow-hidden shadow-md rounded-md">
         <div className="px-5 py-10 space-y-10">
           <div>
             <h3 className="text-2xl font-bold">Facturas</h3>
             <p className="text-sm text-[#70907A]">Añade tus facturas</p>
           </div>
 
-          <div className="flex items-center gap-5 w-full">
-            <form className="flex items-center gap-5 w-full">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center gap-5 w-full">
+            <form className="flex flex-col lg:flex-row items-start lg:items-center gap-5 w-full">
               <Input
                 type="text"
                 label="Facturas"
@@ -241,7 +241,7 @@ const FacturasTabla = ({
               <Select
                 label="Tipo"
                 placeholder="Seleccione su tipo de factura"
-                className="max-w-xs text-black"
+                className="w-full lg:max-w-xs text-black"
                 name="tipos"
                 value={facturaScheme.tipos}
                 size="sm"
@@ -257,7 +257,7 @@ const FacturasTabla = ({
               <Select
                 label="Categoria"
                 placeholder="Seleccione su categoria de factura"
-                className="max-w-xs text-black"
+                className="w-full lg:max-w-xs text-black"
                 name="categorias"
                 value={facturaScheme.categorias}
                 size="sm"

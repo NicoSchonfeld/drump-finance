@@ -205,7 +205,7 @@ const GastosTabla = ({
 
   return (
     <>
-      <div className="col-span-12 text-[#202b21] bg-white  shadow-md rounded-md">
+      <div className="col-span-1 lg:col-span-12 text-[#202b21] bg-white overflow-hidden shadow-md rounded-md">
         <div className="px-5 py-10 space-y-10">
           <div>
             <h3 className="text-2xl font-bold">Gastos</h3>
@@ -236,7 +236,7 @@ const GastosTabla = ({
             <Select
               label="Tipo"
               placeholder="Seleccione su tipo de factura"
-              className="max-w-xs text-black"
+              className="w-full lg:max-w-xs text-black"
               name="tipos"
               value={gastosScheme.tipos}
               size="sm"
@@ -252,7 +252,7 @@ const GastosTabla = ({
             <Select
               label="Categoria"
               placeholder="Seleccione su categoria de factura"
-              className="max-w-xs text-black"
+              className="w-full lg:max-w-xs text-black"
               name="categorias"
               value={gastosScheme.categorias}
               size="sm"

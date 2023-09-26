@@ -182,7 +182,7 @@ const Dashboard = () => {
   return (
     <>
       <section className="w-full h-auto bg-[#E5F1E8]">
-        <div className="container mx-auto w-full h-full px-5 py-20 grid gird-cols-1 md:grid-cols-4 lg:grid-cols-12 gap-5">
+        <div className="container mx-auto w-full h-full px-5 py-20 grid gird-cols-1 lg:grid-cols-12 gap-5">
           <PresupuestoTotal
             userIsValid={userIsValid}
             totalIngresos={totalIngresos}

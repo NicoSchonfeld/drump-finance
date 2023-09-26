@@ -57,7 +57,7 @@ const PresupuestoTotal = ({
 }) => {
   return (
     <>
-      <div className="row-span-4 col-span-3 text-[#202b21] bg-white px-5 py-10 shadow-md rounded-md">
+      <div className="row-span-4 col-span-1 lg:col-span-3 text-[#202b21] bg-white px-5 py-10 shadow-md rounded-md">
         <div className="w-full h-auto flex flex-col items-center gap-3 justify-center">
           <Skeleton
             className="rounded bg-[#bfd1c0] shadow-md shadow-green-500/50"
@@ -94,7 +94,7 @@ const PresupuestoTotal = ({
                   maxValue={method50_30_20?.total_50}
                   color="primary"
                   showValueLabel={method50_30_20?.total_50 > 0 ? true : false}
-                  className="max-w-md"
+                  className="w-full lg:max-w-md"
                 />
               </div>
             </Skeleton>
@@ -117,7 +117,7 @@ const PresupuestoTotal = ({
                   color="primary"
                   /* formatOptions={{ style: "currency", currency: "ARS" }} */
                   showValueLabel={method50_30_20?.total_50 > 0 ? true : false}
-                  className="max-w-md"
+                  className="w-full lg:max-w-md"
                 />
               </div>
             </Skeleton>
@@ -140,12 +140,12 @@ const PresupuestoTotal = ({
                   color="primary"
                   /* formatOptions={{ style: "currency", currency: "ARS" }} */
                   showValueLabel={method50_30_20?.total_50 > 0 ? true : false}
-                  className="max-w-md"
+                  className="w-full lg:max-w-md"
                 />
               </div>
             </Skeleton>
           </div>
-          <div className="mt-5 w-full flex items-center gap-5">
+          <div className="mt-5 w-full flex flex-col lg:flex-row items-center gap-5">
             <Skeleton
               className="rounded bg-[#bfd1c0] w-full"
               isLoaded={userIsValid}
