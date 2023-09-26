@@ -3,7 +3,7 @@ import PocketBase from "pocketbase";
 const URL = process.env.URL_POCKETBASE_PROD || "http://127.0.0.1:8090";
 export const pb = new PocketBase(URL);
 
-export const isValid = pb.authStore.isValid;
+export const isValid = pb?.authStore?.isValid;
 
 /* USUARIO */
 
@@ -1534,4 +1534,98 @@ export const getTotalAhorros = async () => {
   );
 
   return onlyTotalAhorrosAuthUser;
+};
+
+export const getDataChart = async () => {
+  try {
+    if (pb?.authStore?.isValid) {
+      /* FACTURAS */
+      const allFacturas = await pb.collection("facturas").getFullList({
+        sort: "-created",
+      });
+
+      const onlyFacturasAuth = allFacturas.filter(
+        (item) => item?.idUser == pb?.authStore?.model?.id
+      );
+
+      const facturasNecesidades = onlyFacturasAuth.filter(
+        (item) => item?.categorias == 1
+      );
+
+      const facturasDeseos = onlyFacturasAuth.filter(
+        (item) => item?.categorias == 2
+      );
+
+      const facturasAhorros = onlyFacturasAuth.filter(
+        (item) => item?.categorias == 3
+      );
+
+      /* GASTOS */
+      const allGastos = await pb.collection("gastos").getFullList({
+        sort: "-created",
+      });
+
+      const onlyGastosAuth = allGastos.filter(
+        (item) => item?.idUser == pb?.authStore?.model?.id
+      );
+
+      const gastosNecesidades = onlyGastosAuth.filter(
+        (item) => item?.categorias == 1
+      );
+
+      const gastosDeseos = onlyGastosAuth.filter(
+        (item) => item?.categorias == 2
+      );
+
+      const gastosAhorros = onlyGastosAuth.filter(
+        (item) => item?.categorias == 3
+      );
+
+      /* AHORROS */
+      const allAhorros = await pb.collection("ahorros").getFullList({
+        sort: "-created",
+      });
+
+      const onlyAhorrosAuth = allAhorros.filter(
+        (item) => item?.idUser == pb?.authStore?.model?.id
+      );
+
+      const ahorrosNecesidades = onlyAhorrosAuth.filter(
+        (item) => item?.categorias == 1
+      );
+
+      const ahorrosDeseos = onlyAhorrosAuth.filter(
+        (item) => item?.categorias == 2
+      );
+
+      const ahorrosAhorros = onlyAhorrosAuth.filter(
+        (item) => item?.categorias == 3
+      );
+
+      const sumaNecesidades =
+        facturasNecesidades.length +
+        gastosNecesidades.length +
+        ahorrosNecesidades.length;
+
+      const sumaDeseos =
+        facturasDeseos.length + gastosDeseos.length + ahorrosDeseos.length;
+
+      const sumaAhorros =
+        facturasAhorros.length + gastosAhorros.length + ahorrosAhorros.length;
+
+      /* console.log(
+        `Necesidades: ${sumaNecesidades} || Deseos: ${sumaDeseos} || Ahorros: ${sumaAhorros}`
+      ); */
+
+      const dataChart = {
+        necesidades: sumaNecesidades,
+        deseos: sumaDeseos,
+        ahorros: sumaAhorros,
+      };
+
+      return dataChart;
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };

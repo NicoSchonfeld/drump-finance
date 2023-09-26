@@ -191,19 +191,22 @@ const Dashboard = () => {
           />
 
           <PresupuestoPorAsignar
+            userIsValid={userIsValid}
             presupuestoPorAsignar={presupuestoPorAsignar}
           />
 
-          <Ahorros totalAhorros={totalAhorros} />
-
           <TotalGastos
+            userIsValid={userIsValid}
             totalFacturas={totalFacturas}
             totalGastos={totalGastos}
           />
 
-          <Graficos />
+          <Ahorros userIsValid={userIsValid} totalAhorros={totalAhorros} />
+
+          <Graficos userIsValid={userIsValid} />
 
           <FacturasTabla
+            userIsValid={userIsValid}
             categorias={categorias}
             tipos={tipos}
             tablaFacturas={tablaFacturas}
@@ -212,6 +215,7 @@ const Dashboard = () => {
           />
 
           <GastosTabla
+            userIsValid={userIsValid}
             categorias={categorias}
             tipos={tipos}
             tablaGastos={tablaGastos}
@@ -220,6 +224,7 @@ const Dashboard = () => {
           />
 
           <AhorrosTabla
+            userIsValid={userIsValid}
             categorias={categorias}
             tipos={tipos}
             tablaAhorros={tablaAhorros}

@@ -64,7 +64,7 @@ const PresupuestoTotal = ({
             isLoaded={userIsValid}
           >
             <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700  p-2 text-white rounded flex items-center justify-center">
-              <FaMoneyBillWave className="text-3xl" />
+              <GiReceiveMoney className="text-2xl" />
             </div>
           </Skeleton>
           <Skeleton className="rounded bg-[#bfd1c0]" isLoaded={userIsValid}>

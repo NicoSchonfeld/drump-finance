@@ -5,6 +5,7 @@ import Image from "next/image";
 import line from "@/assets/line.png";
 import { Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
+import NextLink from "next/link";
 
 const HomePage = () => {
   return (
@@ -48,10 +49,23 @@ const HomePage = () => {
               transition={{ delay: 0.2 }}
               className="flex items-center justify-center gap-5"
             >
-              <Button color="primary" radius="sm">
+              <Button
+                as={NextLink}
+                href="/dashboard"
+                color="primary"
+                radius="sm"
+                className="font-medium"
+              >
                 Empezar
               </Button>
-              <Button color="primary" radius="sm" variant="bordered">
+              <Button
+                as={NextLink}
+                href="/howToUse"
+                color="primary"
+                radius="sm"
+                variant="bordered"
+                className="font-medium"
+              >
                 Cómo usar
               </Button>
             </motion.div>
