@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { GiReceiveMoney, GiTakeMyMoney, GiPayMoney } from "react-icons/gi";
 import { FaMoneyBillWave } from "react-icons/fa6";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
@@ -53,9 +53,8 @@ import {
   getGastos,
   getAhorros,
   getTotalAhorros,
-  getAllRevenue,
+  getDataCategoriaForChart,
 } from "@/base/db/pocketbase";
-import { formatNumber } from "@/base/formatNumber";
 import PresupuestoTotal from "@/components/PresupuestoTotal";
 import FacturasTabla from "@/components/FacturasTabla";
 import GastosTabla from "@/components/GastosTabla";
@@ -75,6 +74,7 @@ const Dashboard = () => {
   const [totalGastos, setTotalGastos] = React.useState(0);
   const [tablaAhorros, setTablaAhorros] = React.useState([]);
   const [totalAhorros, setTotalAhorros] = React.useState(0);
+  const [dataCategorias, setDataCategorias] = React.useState();
 
   const categorias = [
     { id: 1, title: "Necesidades", value: 1 },
@@ -99,6 +99,10 @@ const Dashboard = () => {
 
   React.useEffect(() => {
     if (pb?.authStore?.isValid) {
+      getDataCategoriaForChart().then((res) => {
+        setDataCategorias(res);
+      });
+
       getTotalRevenue().then((res) => {
         if (res[0]) {
           setTotalIngresos(res[0].total);
@@ -203,7 +207,7 @@ const Dashboard = () => {
 
           <Ahorros userIsValid={userIsValid} totalAhorros={totalAhorros} />
 
-          <Graficos userIsValid={userIsValid} />
+          <Graficos userIsValid={userIsValid} dataCategorias={dataCategorias} />
 
           <FacturasTabla
             userIsValid={userIsValid}

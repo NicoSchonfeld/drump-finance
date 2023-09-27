@@ -447,7 +447,7 @@ export const createFacturas = async () => {
         idUser: pb?.authStore?.model?.id,
       };
 
-      const record = await pb
+      const savePresupuesto = await pb
         .collection("total_presupuesto_por_asignar")
         .update(onlyPresAuthUser[0]?.id, data);
 
@@ -1536,10 +1536,29 @@ export const getTotalAhorros = async () => {
   return onlyTotalAhorrosAuthUser;
 };
 
-export const getDataChart = async () => {
+export const getDataCategoriaForChart = async () => {
   try {
     if (pb?.authStore?.isValid) {
-      /* FACTURAS */
+      const allDataCategorias = await pb
+        .collection("data_categorias")
+        .getFullList({
+          sort: "-created",
+        });
+
+      const [onlyCategoriasUserAuth] = allDataCategorias.filter(
+        (item) => item?.idUser == pb?.authStore?.model?.id
+      );
+
+      return onlyCategoriasUserAuth;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getDataCategorias = async () => {
+  try {
+    if (pb?.authStore?.isValid) {
       const allFacturas = await pb.collection("facturas").getFullList({
         sort: "-created",
       });
@@ -1560,7 +1579,6 @@ export const getDataChart = async () => {
         (item) => item?.categorias == 3
       );
 
-      /* GASTOS */
       const allGastos = await pb.collection("gastos").getFullList({
         sort: "-created",
       });
@@ -1581,7 +1599,6 @@ export const getDataChart = async () => {
         (item) => item?.categorias == 3
       );
 
-      /* AHORROS */
       const allAhorros = await pb.collection("ahorros").getFullList({
         sort: "-created",
       });
@@ -1613,19 +1630,40 @@ export const getDataChart = async () => {
       const sumaAhorros =
         facturasAhorros.length + gastosAhorros.length + ahorrosAhorros.length;
 
-      /* console.log(
-        `Necesidades: ${sumaNecesidades} || Deseos: ${sumaDeseos} || Ahorros: ${sumaAhorros}`
-      ); */
-
-      const dataChart = {
+      const data = {
         necesidades: sumaNecesidades,
         deseos: sumaDeseos,
         ahorros: sumaAhorros,
+        idUser: pb?.authStore?.model?.id,
       };
 
-      return dataChart;
+      const allCategorias = await pb.collection("data_categorias").getFullList({
+        sort: "-created",
+      });
+
+      const onlyCategoriasUserAuth = allCategorias.filter(
+        (item) => item?.idUser == pb?.authStore?.model?.id
+      );
+
+      if (onlyCategoriasUserAuth.length <= 0) {
+        const crearCategorias = await pb
+          .collection("data_categorias")
+          .create(data);
+
+        return crearCategorias;
+      }
+
+      if (onlyCategoriasUserAuth.length > 0) {
+        const updateCategorias = await pb
+          .collection("data_categorias")
+          .update(onlyCategoriasUserAuth[0]?.id, data);
+
+        return updateCategorias;
+      }
     }
   } catch (error) {
     console.log(error);
   }
 };
+
+getDataCategorias();

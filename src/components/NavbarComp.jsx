@@ -85,7 +85,8 @@ const NavbarComp = ({ path }) => {
                 <Button variant="light" className="py-6">
                   <div className="flex flex-col items-end justify-center">
                     <p className="leading-3 font-bold text-[#202b21]">
-                      {pb?.authStore?.model?.username}
+                      {pb?.authStore?.model?.name ??
+                        pb?.authStore?.model?.username}
                     </p>
                     <p className="text-[#70907A] text-sm">
                       {pb?.authStore?.model?.email}

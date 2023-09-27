@@ -16,9 +16,11 @@ const SignUp = () => {
 
   const [userSignUpScheme, setUserSignUpScheme] = React.useState({
     username: "",
+    name: "",
     email: "",
     password: "",
     passwordConfirm: "",
+    suscripcion: false,
   });
 
   const handleChange = (e) => {
@@ -33,9 +35,11 @@ const SignUp = () => {
     signUp(userSignUpScheme).then((res) => {
       setUserSignUpScheme({
         username: "",
+        name: "",
         email: "",
         password: "",
         passwordConfirm: "",
+        suscripcion: false,
       });
       location.replace("/auth/login");
       toggleVisibility();
@@ -64,6 +68,16 @@ const SignUp = () => {
               name="username"
               onChange={handleChange}
             />
+
+            <Input
+              type="text"
+              label="Nombre"
+              isRequired
+              value={userSignUpScheme.name}
+              name="name"
+              onChange={handleChange}
+            />
+
             <Input
               type="email"
               label="Email"
