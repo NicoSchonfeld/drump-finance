@@ -1,17 +1,48 @@
 import { formatNumber } from "@/base/formatNumber";
 import {
   Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Popover,
   PopoverContent,
   PopoverTrigger,
   Skeleton,
   Tooltip,
 } from "@nextui-org/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { AiOutlineInfoCircle, AiOutlineQuestionCircle } from "react-icons/ai";
 import { FaMoneyBillWave } from "react-icons/fa6";
 
 const PresupuestoPorAsignar = ({ presupuestoPorAsignar, userIsValid }) => {
+  const [modalPresupuesto, setModalPresupuesto] = React.useState(false);
+
+  const renderPresupuesto = () => {
+    if (presupuestoPorAsignar <= 0) {
+      return (
+        <span className="text-red-500">
+          ${formatNumber(presupuestoPorAsignar.toFixed(2))}
+        </span>
+      );
+    } else {
+      return (
+        <span className="text-black">
+          ${formatNumber(presupuestoPorAsignar.toFixed(2))}
+        </span>
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (presupuestoPorAsignar <= 0) {
+      setModalPresupuesto(true);
+    } else {
+      setModalPresupuesto(false);
+    }
+  }, [presupuestoPorAsignar]);
+
   return (
     <>
       <div className="col-span-1 lg:col-span-3 text-[#202b21] bg-white shadow-md rounded-md py-10">
@@ -57,13 +88,36 @@ const PresupuestoPorAsignar = ({ presupuestoPorAsignar, userIsValid }) => {
                 isLoaded={userIsValid}
               >
                 <span className="font-normal text-base">
-                  ${formatNumber(presupuestoPorAsignar.toFixed(2))}
+                  {renderPresupuesto()}
                 </span>
               </Skeleton>
             </div>
           </div>
         </div>
       </div>
+
+      <Modal isOpen={modalPresupuesto}>
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1">
+            NO hay presupuesto
+          </ModalHeader>
+          <ModalBody>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+              pulvinar risus non risus hendrerit venenatis. Pellentesque sit
+              amet hendrerit risus, sed porttitor quam.
+            </p>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light">
+              Close
+            </Button>
+            <Button color="primary" onClick={() => setModalPresupuesto(false)}>
+              Action
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 };

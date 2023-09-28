@@ -41,6 +41,10 @@ import {
 } from "victory";
 import NextLink from "next/link";
 
+import { TbPigMoney } from "react-icons/tb";
+import { MdOutlineMoneyOff } from "react-icons/md";
+import { LiaMoneyCheckSolid } from "react-icons/lia";
+
 import {
   getTotalMethod50_30_20,
   getTotalRevenue,
@@ -83,7 +87,7 @@ const PresupuestoTotal = ({
             >
               <div className="flex items-center gap-3">
                 <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700  p-2 text-white rounded flex items-center justify-center">
-                  <FaMoneyBillWave className="text-xl" />
+                  <LiaMoneyCheckSolid className="text-xl" />
                 </div>
                 <Progress
                   label={`Necesidades: $${
@@ -105,7 +109,7 @@ const PresupuestoTotal = ({
             >
               <div className="flex items-center gap-3">
                 <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700  p-2 text-white rounded flex items-center justify-center">
-                  <FaMoneyBillWave className="text-xl" />
+                  <MdOutlineMoneyOff className="text-xl" />
                 </div>
                 <Progress
                   label={`Deseos: $${
@@ -128,7 +132,7 @@ const PresupuestoTotal = ({
             >
               <div className="flex items-center gap-3">
                 <div className="bg-gradient-to-b from-green-600 to-green-400 border border-green-700  p-2 text-white rounded flex items-center justify-center">
-                  <FaMoneyBillWave className="text-xl" />
+                  <TbPigMoney className="text-xl" />
                 </div>
                 <Progress
                   label={`Ahorros: $${

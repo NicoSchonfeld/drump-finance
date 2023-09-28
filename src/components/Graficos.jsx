@@ -34,6 +34,16 @@ const Graficos = ({ userIsValid, dataCategorias }) => {
         </Skeleton>
 
         <Skeleton
+          className="rounded w-80 mt-2 bg-[#bfd1c0]"
+          isLoaded={userIsValid}
+        >
+          <p className="text-sm text-[#70907A]">
+            Aqui se mostrara en un grafico la cantidad de categorias que has
+            utilizado en las tablas.
+          </p>
+        </Skeleton>
+
+        <Skeleton
           className="rounded w-auto mt-5 bg-[#bfd1c0]"
           isLoaded={userIsValid}
         >

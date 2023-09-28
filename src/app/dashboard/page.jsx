@@ -118,63 +118,63 @@ const Dashboard = () => {
           return;
         }
       });
+
+      getPresupuestoXAsignar().then((res) => {
+        if (res[0]) {
+          setPresupuestoPorAsignar(res[0]?.total);
+        } else {
+          return;
+        }
+      });
+
+      getFacutras().then((res) => {
+        if (res[0]) {
+          setTablaFacturas(res);
+        } else {
+          return;
+        }
+      });
+
+      getTotalFacutras().then((res) => {
+        if (res[0]) {
+          setTotalFacturas(res[0]?.total);
+        } else {
+          return;
+        }
+      });
+
+      getGastos().then((res) => {
+        if (res[0]) {
+          setTablaGastos(res);
+        } else {
+          return;
+        }
+      });
+
+      getTotalGastos().then((res) => {
+        if (res[0]) {
+          setTotalGastos(res[0]?.total);
+        } else {
+          return;
+        }
+      });
+
+      getAhorros().then((res) => {
+        if (res[0]) {
+          setTablaAhorros(res);
+        } else {
+          return;
+        }
+      });
+
+      getTotalAhorros().then((res) => {
+        if (res[0]) {
+          setTotalAhorros(res[0]?.total);
+        } else {
+          return;
+        }
+      });
     }
-
-    getPresupuestoXAsignar().then((res) => {
-      if (res[0]) {
-        setPresupuestoPorAsignar(res[0]?.total);
-      } else {
-        return;
-      }
-    });
-
-    getFacutras().then((res) => {
-      if (res[0]) {
-        setTablaFacturas(res);
-      } else {
-        return;
-      }
-    });
-
-    getTotalFacutras().then((res) => {
-      if (res[0]) {
-        setTotalFacturas(res[0]?.total);
-      } else {
-        return;
-      }
-    });
-
-    getGastos().then((res) => {
-      if (res[0]) {
-        setTablaGastos(res);
-      } else {
-        return;
-      }
-    });
-
-    getTotalGastos().then((res) => {
-      if (res[0]) {
-        setTotalGastos(res[0]?.total);
-      } else {
-        return;
-      }
-    });
-
-    getAhorros().then((res) => {
-      if (res[0]) {
-        setTablaAhorros(res);
-      } else {
-        return;
-      }
-    });
-
-    getTotalAhorros().then((res) => {
-      if (res[0]) {
-        setTotalAhorros(res[0]?.total);
-      } else {
-        return;
-      }
-    });
   }, []);
 
   const [userIsValid, setUserIsValid] = React.useState(false);
@@ -238,28 +238,9 @@ const Dashboard = () => {
 
           <Modal isOpen={!userIsValid}>
             <ModalContent>
-              <ModalHeader className="flex flex-col gap-1">
-                Modal Title
-              </ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">Login</ModalHeader>
               <ModalBody>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                </p>
-                <p>
-                  Magna exercitation reprehenderit magna aute tempor cupidatat
-                  consequat elit dolor adipisicing. Mollit dolor eiusmod sunt ex
-                  incididunt cillum quis. Velit duis sit officia eiusmod Lorem
-                  aliqua enim laboris do dolor eiusmod. Et mollit incididunt
-                  nisi consectetur esse laborum eiusmod pariatur proident Lorem
-                  eiusmod et. Culpa deserunt nostrud ad veniam.
-                </p>
+                <p>Login</p>
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light">
