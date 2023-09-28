@@ -1,56 +1,16 @@
 "use client";
 
 import React from "react";
-import { GiReceiveMoney, GiTakeMyMoney, GiPayMoney } from "react-icons/gi";
-import { FaMoneyBillWave } from "react-icons/fa6";
-import { AiOutlineQuestionCircle } from "react-icons/ai";
-import {
-  Button,
-  Tooltip,
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Progress,
-  Divider,
-  Chip,
-  Skeleton,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-  Tabs,
-  Tab,
-  Card,
-  CardBody,
-  ScrollShadow,
-  Input,
-  SelectItem,
-  Select,
-} from "@nextui-org/react";
-import NextImage from "next/image";
-import {
-  VictoryArea,
-  VictoryChart,
-  VictoryClipContainer,
-  VictoryPie,
-} from "victory";
+import { GiReceiveMoney } from "react-icons/gi";
+
+import { Button, Progress, Skeleton } from "@nextui-org/react";
+
 import NextLink from "next/link";
 
 import { TbPigMoney } from "react-icons/tb";
 import { MdOutlineMoneyOff } from "react-icons/md";
 import { LiaMoneyCheckSolid } from "react-icons/lia";
 
-import {
-  getTotalMethod50_30_20,
-  getTotalRevenue,
-  pb,
-  isValid,
-} from "@/base/db/pocketbase";
 import { formatNumber } from "@/base/formatNumber";
 
 const PresupuestoTotal = ({
