@@ -315,24 +315,9 @@ const GastosTabla = ({
               isLoaded={userIsValid}
             >
               {presupuestoPorAsignar <= 0 ? (
-                <Tooltip content="No tienes presupuesto suficiente para asignar">
-                  <Button
-                    type="submit"
-                    color="default"
-                    variant="solid"
-                    disabled
-                    isIconOnly
-                    size="lg"
-                    radius="sm"
-                    className="cursor-not-allowed"
-                  >
-                    +
-                  </Button>
-                </Tooltip>
-              ) : (
                 <>
                   {editState ? (
-                    <>
+                    <div className="flex items-center gap-2 px-2">
                       <Button
                         onClick={() => handleSubmitUpdate()}
                         type="button"
@@ -366,7 +351,62 @@ const GastosTabla = ({
                       >
                         <AiOutlineClose />
                       </Button>
-                    </>
+                    </div>
+                  ) : (
+                    <Tooltip content="No tienes presupuesto suficiente para asignar">
+                      <Button
+                        type="submit"
+                        color="default"
+                        variant="solid"
+                        disabled
+                        isIconOnly
+                        size="lg"
+                        radius="sm"
+                        className="cursor-not-allowed"
+                      >
+                        +
+                      </Button>
+                    </Tooltip>
+                  )}
+                </>
+              ) : (
+                <>
+                  {editState ? (
+                    <div className="flex items-center gap-2 px-2">
+                      <Button
+                        onClick={() => handleSubmitUpdate()}
+                        type="button"
+                        color="primary"
+                        variant="solid"
+                        isIconOnly
+                        size="lg"
+                        radius="sm"
+                      >
+                        <AiOutlineEdit />
+                      </Button>
+
+                      <Button
+                        onClick={() => {
+                          setGastosScheme({
+                            gastos: "",
+                            presupuesto: 0,
+                            tipos: "",
+                            categorias: "",
+                            idUser: pb?.authStore?.model?.id,
+                          });
+                          setEditState(false);
+                          setIdUpdateScheme("");
+                        }}
+                        type="button"
+                        color="danger"
+                        variant="solid"
+                        isIconOnly
+                        size="lg"
+                        radius="sm"
+                      >
+                        <AiOutlineClose />
+                      </Button>
+                    </div>
                   ) : (
                     <Button
                       onClick={() => handleSubmit()}

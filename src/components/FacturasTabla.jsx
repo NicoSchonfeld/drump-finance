@@ -1,3 +1,5 @@
+import moment from "moment";
+
 import {
   addFacturas,
   deleteFacturas,
@@ -38,7 +40,13 @@ const FacturasTabla = ({
   presupuestoPorAsignar,
   userIsValid,
 }) => {
-  const route = useRouter();
+  moment.locale("es-mx");
+  const formatoDefault = "dddd Do MMMM YYYY"; // ejemplo: jueves 26º octubre 2023
+  const soloMesFormato = "MMMM";
+  const soloNumero = "Do";
+  const soloDia = "dddd";
+  const soloAño = "YYYY";
+  const hoy = moment();
 
   const [facturaScheme, setFacturaScheme] = React.useState({
     facturas: "",
@@ -49,6 +57,16 @@ const FacturasTabla = ({
   });
   const [editState, setEditState] = useState(false);
   const [idUpdateScheme, setIdUpdateScheme] = useState("");
+
+  console.log({
+    dia: hoy.format(soloDia),
+    fecha: hoy.format(soloNumero),
+    mes: hoy.format(soloMesFormato),
+    año: hoy.format(soloAño),
+    fechaDefault: hoy.format("ll"),
+    fechaCalendar: hoy.format("L"),
+    fechaInfo: hoy.format(formatoDefault),
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -319,24 +337,9 @@ const FacturasTabla = ({
               isLoaded={userIsValid}
             >
               {presupuestoPorAsignar <= 0 ? (
-                <Tooltip content="No tienes presupuesto suficiente para asignar">
-                  <Button
-                    type="submit"
-                    color="default"
-                    variant="solid"
-                    disabled
-                    isIconOnly
-                    size="lg"
-                    radius="sm"
-                    className="cursor-not-allowed"
-                  >
-                    +
-                  </Button>
-                </Tooltip>
-              ) : (
                 <>
                   {editState ? (
-                    <>
+                    <div className="flex items-center gap-2 px-2">
                       <Button
                         onClick={() => handleSubmitUpdate()}
                         type="button"
@@ -370,7 +373,62 @@ const FacturasTabla = ({
                       >
                         <AiOutlineClose />
                       </Button>
-                    </>
+                    </div>
+                  ) : (
+                    <Tooltip content="No tienes presupuesto suficiente para asignar">
+                      <Button
+                        type="submit"
+                        color="default"
+                        variant="solid"
+                        disabled
+                        isIconOnly
+                        size="lg"
+                        radius="sm"
+                        className="cursor-not-allowed"
+                      >
+                        +
+                      </Button>
+                    </Tooltip>
+                  )}
+                </>
+              ) : (
+                <>
+                  {editState ? (
+                    <div className="flex items-center gap-2 px-2">
+                      <Button
+                        onClick={() => handleSubmitUpdate()}
+                        type="button"
+                        color="primary"
+                        variant="solid"
+                        isIconOnly
+                        size="lg"
+                        radius="sm"
+                      >
+                        <AiOutlineEdit />
+                      </Button>
+
+                      <Button
+                        onClick={() => {
+                          setFacturaScheme({
+                            facturas: "",
+                            presupuesto: 0,
+                            tipos: "",
+                            categorias: "",
+                            idUser: pb?.authStore?.model?.id,
+                          });
+                          setEditState(false);
+                          setIdUpdateScheme("");
+                        }}
+                        type="button"
+                        color="danger"
+                        variant="solid"
+                        isIconOnly
+                        size="lg"
+                        radius="sm"
+                      >
+                        <AiOutlineClose />
+                      </Button>
+                    </div>
                   ) : (
                     <Button
                       onClick={() => handleSubmit()}
