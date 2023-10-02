@@ -4,70 +4,97 @@ import React from "react";
 import Image from "next/image";
 import line from "@/assets/line.png";
 import { Button } from "@nextui-org/react";
-import { motion } from "framer-motion";
+import { motion, useScroll } from "framer-motion";
 import NextLink from "next/link";
+
+import ImageHome from "@/assets/imageHome.png";
 
 const HomePage = () => {
   return (
     <>
       {/* bg-[#EEF8F0] */} {/* bg-[#182019] negro 2 */}
       <main className="w-full h-screen bg-[#E5F1E8]">
-        <div className="container mx-auto w-full h-full px-5 flex items-start justify-center flex-col">
+        <div className="container mx-auto w-full h-full px-5 py-10 flex flex-col lg:flex-row items-center justify-center gap-20 lg:justify-between">
           <div className="flex items-start flex-col gap-5">
-            <motion.h1
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-[#182019] font-bold text-5xl z-[2]"
-            >
-              Mantenga el{" "}
-              <span className="relative text-green-500 overflow-hidden ">
-                {" "}
-                <Image
-                  src={line}
-                  alt={`image`}
-                  width={300}
-                  height={300}
-                  className="absolute top-0 left-0 -z-[1]"
-                />
-                control total
-              </span>{" "}
-              de <br /> sus finanzas.
-            </motion.h1>
+            <div className="overflow-hidden">
+              <motion.h1
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="text-[#182019] font-bold text-xl lg:text-5xl z-[2]"
+              >
+                Mantenga el{" "}
+                <span className="relative text-green-500 overflow-hidden ">
+                  {" "}
+                  <Image
+                    src={line}
+                    alt={`image`}
+                    width={300}
+                    height={300}
+                    className="absolute top-0 left-0 -z-[1]"
+                  />
+                  control total
+                </span>{" "}
+                de <br /> sus finanzas.
+              </motion.h1>
+            </div>
 
-            <motion.p
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-[#70907A]"
-            >
-              En poco tiempo, podrás personalizar tu presupuesto y <br />{" "}
-              empezar a ver resultados inmediatos.
-            </motion.p>
+            <div className="overflow-hidden">
+              <motion.p
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="text-[#70907A] text-sm lg:text-base"
+              >
+                En poco tiempo, podrás personalizar tu presupuesto y <br />{" "}
+                empezar a ver resultados inmediatos.
+              </motion.p>
+            </div>
+
+            <div className="overflow-hidden">
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="flex items-center justify-center gap-5"
+              >
+                <Button
+                  as={NextLink}
+                  href="/dashboard"
+                  color="primary"
+                  radius="sm"
+                  className="font-medium"
+                >
+                  Empezar
+                </Button>
+                <Button
+                  as={NextLink}
+                  href="/howToUse"
+                  color="primary"
+                  radius="sm"
+                  variant="bordered"
+                  className="font-medium"
+                >
+                  Cómo usar
+                </Button>
+              </motion.div>
+            </div>
+          </div>
+
+          <div className="overflow-hidden rounded-md relative hover:shadow-md transition-all">
             <motion.div
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="flex items-center justify-center gap-5"
+              initial={{ height: "100%" }}
+              animate={{ height: "0%" }}
+              transition={{ duration: 1 }}
+              className="w-full h-full bg-[#E5F1E8] absolute top-0 left-0 z-[5]"
+            ></motion.div>
+
+            <motion.div
+              initial={{ opacity: 1, scale: 1.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1 }}
             >
-              <Button
-                as={NextLink}
-                href="/dashboard"
-                color="primary"
-                radius="sm"
-                className="font-medium"
-              >
-                Empezar
-              </Button>
-              <Button
-                as={NextLink}
-                href="/howToUse"
-                color="primary"
-                radius="sm"
-                variant="bordered"
-                className="font-medium"
-              >
-                Cómo usar
-              </Button>
+              <Image src={ImageHome} alt="image" width={700} height={500} />
             </motion.div>
           </div>
         </div>
