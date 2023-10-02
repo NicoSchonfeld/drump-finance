@@ -1,3 +1,6 @@
+import moment from "moment";
+import "moment/locale/es";
+
 import {
   addAhorros,
   addGastos,
@@ -37,12 +40,22 @@ const AhorrosTabla = ({
   presupuestoPorAsignar,
   userIsValid,
 }) => {
+  const formatoDefault = "dddd Do MMMM YYYY"; // ejemplo: jueves 26º octubre 2023
+  const soloMesFormato = "MMMM";
+  const soloNumero = "Do";
+  const soloDia = "dddd";
+  const soloAño = "YYYY";
+  const hoy = moment();
+
   const [ahorrosScheme, setAhorrosScheme] = React.useState({
     ahorros: "",
     presupuesto: 0,
     tipos: "",
     categorias: "",
     idUser: pb?.authStore?.model?.id,
+    mes: hoy.format(soloMesFormato),
+    ano: hoy.format(soloAño),
+    fecha: hoy.format(soloNumero),
   });
   const [editState, setEditState] = useState(false);
   const [idUpdateScheme, setIdUpdateScheme] = useState("");
@@ -70,6 +83,9 @@ const AhorrosTabla = ({
         tipos: "",
         categorias: "",
         idUser: pb?.authStore?.model?.id,
+        mes: hoy.format(soloMesFormato),
+        ano: hoy.format(soloAño),
+        fecha: hoy.format(soloNumero),
       });
     } else {
       console.log("LLenar campos");
@@ -83,6 +99,9 @@ const AhorrosTabla = ({
       tipos: dato?.tipos,
       categorias: dato?.categorias,
       idUser: pb?.authStore?.model?.id,
+      mes: hoy.format(soloMesFormato),
+      ano: hoy.format(soloAño),
+      fecha: hoy.format(soloNumero),
     });
     setIdUpdateScheme(id);
   };
@@ -104,6 +123,9 @@ const AhorrosTabla = ({
         tipos: "",
         categorias: "",
         idUser: pb?.authStore?.model?.id,
+        mes: hoy.format(soloMesFormato),
+        ano: hoy.format(soloAño),
+        fecha: hoy.format(soloNumero),
       });
     } else {
       console.log("llenar campos");

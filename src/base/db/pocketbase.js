@@ -1,4 +1,13 @@
+import moment from "moment";
+import "moment/locale/es";
 import PocketBase from "pocketbase";
+
+const formatoDefault = "dddd Do MMMM YYYY"; // ejemplo: jueves 26º octubre 2023
+const soloMesFormato = "MMMM";
+const soloNumero = "Do";
+const soloDia = "dddd";
+const soloAño = "YYYY";
+const hoy = moment();
 
 const URL = process.env.URL_POCKETBASE_PROD || "http://127.0.0.1:8090";
 export const pb = new PocketBase(URL);
@@ -1545,11 +1554,16 @@ export const getDataCategoriaForChart = async () => {
           sort: "-created",
         });
 
-      const [onlyCategoriasUserAuth] = allDataCategorias.filter(
+      const onlyCategoriasUserAuth = allDataCategorias.filter(
         (item) => item?.idUser == pb?.authStore?.model?.id
       );
 
-      return onlyCategoriasUserAuth;
+      const [resultArray] = onlyCategoriasUserAuth;
+
+      /*       console.log(onlyCategoriasUserAuth);
+      console.log(resultArray); */
+
+      return resultArray;
     }
   } catch (error) {
     console.log(error);
@@ -1635,6 +1649,8 @@ export const getDataCategorias = async () => {
         deseos: sumaDeseos,
         ahorros: sumaAhorros,
         idUser: pb?.authStore?.model?.id,
+        mes: hoy.format(soloMesFormato),
+        ano: hoy.format(soloAño),
       };
 
       const allCategorias = await pb.collection("data_categorias").getFullList({
@@ -1645,6 +1661,9 @@ export const getDataCategorias = async () => {
         (item) => item?.idUser == pb?.authStore?.model?.id
       );
 
+      const mesHoy = hoy.format(soloMesFormato);
+      const añoHoy = hoy.format(soloAño);
+
       if (onlyCategoriasUserAuth.length <= 0) {
         const crearCategorias = await pb
           .collection("data_categorias")
@@ -1654,11 +1673,46 @@ export const getDataCategorias = async () => {
       }
 
       if (onlyCategoriasUserAuth.length > 0) {
-        const updateCategorias = await pb
-          .collection("data_categorias")
-          .update(onlyCategoriasUserAuth[0]?.id, data);
+        if (
+          onlyCategoriasUserAuth[0]?.mes == mesHoy &&
+          onlyCategoriasUserAuth[0]?.ano == añoHoy
+        ) {
+          const newData = {
+            necesidades: sumaNecesidades,
+            deseos: sumaDeseos,
+            ahorros: sumaAhorros,
+            idUser: pb?.authStore?.model?.id,
+            mes: onlyCategoriasUserAuth[0]?.mes,
+            ano: onlyCategoriasUserAuth[0]?.ano,
+          };
 
-        return updateCategorias;
+          const updateCategorias = await pb
+            .collection("data_categorias")
+            .update(onlyCategoriasUserAuth[0]?.id, newData);
+
+          return updateCategorias;
+        } else {
+          const newData = {
+            necesidades: sumaNecesidades,
+            deseos: sumaDeseos,
+            ahorros: sumaAhorros,
+            idUser: pb?.authStore?.model?.id,
+            mes:
+              onlyCategoriasUserAuth[0]?.mes == mesHoy
+                ? onlyCategoriasUserAuth[0]?.mes
+                : mesHoy,
+            ano:
+              onlyCategoriasUserAuth[0]?.ano == añoHoy
+                ? onlyCategoriasUserAuth[0]?.ano
+                : añoHoy,
+          };
+
+          const crearCategorias = await pb
+            .collection("data_categorias")
+            .create(newData);
+
+          return crearCategorias;
+        }
       }
     }
   } catch (error) {

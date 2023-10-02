@@ -1,3 +1,6 @@
+import moment from "moment";
+import "moment/locale/es";
+
 import {
   addGastos,
   deleteGastos,
@@ -36,12 +39,22 @@ const GastosTabla = ({
   presupuestoPorAsignar,
   userIsValid,
 }) => {
+  const formatoDefault = "dddd Do MMMM YYYY"; // ejemplo: jueves 26º octubre 2023
+  const soloMesFormato = "MMMM";
+  const soloNumero = "Do";
+  const soloDia = "dddd";
+  const soloAño = "YYYY";
+  const hoy = moment();
+
   const [gastosScheme, setGastosScheme] = React.useState({
     gastos: "",
     presupuesto: 0,
     tipos: "",
     categorias: "",
     idUser: pb?.authStore?.model?.id,
+    mes: hoy.format(soloMesFormato),
+    ano: hoy.format(soloAño),
+    fecha: hoy.format(soloNumero),
   });
   const [editState, setEditState] = useState(false);
   const [idUpdateScheme, setIdUpdateScheme] = useState("");
@@ -69,6 +82,9 @@ const GastosTabla = ({
         tipos: "",
         categorias: "",
         idUser: pb?.authStore?.model?.id,
+        mes: hoy.format(soloMesFormato),
+        ano: hoy.format(soloAño),
+        fecha: hoy.format(soloNumero),
       });
     } else {
       console.log("LLenar campos");
@@ -82,6 +98,9 @@ const GastosTabla = ({
       tipos: dato?.tipo,
       categorias: dato?.categorias,
       idUser: pb?.authStore?.model?.id,
+      mes: hoy.format(soloMesFormato),
+      ano: hoy.format(soloAño),
+      fecha: hoy.format(soloNumero),
     });
     setIdUpdateScheme(id);
   };
@@ -103,6 +122,9 @@ const GastosTabla = ({
         tipos: "",
         categorias: "",
         idUser: pb?.authStore?.model?.id,
+        mes: hoy.format(soloMesFormato),
+        ano: hoy.format(soloAño),
+        fecha: hoy.format(soloNumero),
       });
     } else {
       console.log("LLenar campos");
@@ -440,10 +462,13 @@ const GastosTabla = ({
               }
             >
               <TableHeader>
-                <TableColumn>Gastos</TableColumn>
+                <TableColumn>Facturas</TableColumn>
                 <TableColumn>Presupuesto</TableColumn>
                 <TableColumn>Tipo</TableColumn>
                 <TableColumn>Categorias</TableColumn>
+                <TableColumn>Fecha</TableColumn>
+                <TableColumn>Mes</TableColumn>
+                <TableColumn>Año</TableColumn>
                 <TableColumn>Acciones</TableColumn>
               </TableHeader>
               <TableBody emptyContent={"No has añadido Gastos."}>
@@ -461,6 +486,15 @@ const GastosTabla = ({
                       </TableCell>
                       <TableCell className="text-green-500">
                         {returnCategorias(dato?.categorias)}
+                      </TableCell>
+                      <TableCell className="text-[#202b21]">
+                        {dato?.fecha}
+                      </TableCell>
+                      <TableCell className="text-[#202b21]">
+                        {dato?.mes}
+                      </TableCell>
+                      <TableCell className="text-[#202b21]">
+                        {dato?.ano}
                       </TableCell>
                       <TableCell className="text-[#202b21]">
                         <Dropdown placement="left">

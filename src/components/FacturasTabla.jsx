@@ -1,4 +1,5 @@
 import moment from "moment";
+import "moment/locale/es";
 
 import {
   addFacturas,
@@ -28,7 +29,6 @@ import {
 } from "@nextui-org/react";
 import React, { useState } from "react";
 import { AiOutlineClose, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
-import { useRouter } from "next/navigation";
 
 import { SlOptionsVertical } from "react-icons/sl";
 
@@ -40,7 +40,6 @@ const FacturasTabla = ({
   presupuestoPorAsignar,
   userIsValid,
 }) => {
-  moment.locale("es-mx");
   const formatoDefault = "dddd Do MMMM YYYY"; // ejemplo: jueves 26º octubre 2023
   const soloMesFormato = "MMMM";
   const soloNumero = "Do";
@@ -54,19 +53,12 @@ const FacturasTabla = ({
     tipos: "",
     categorias: "",
     idUser: pb?.authStore?.model?.id,
+    mes: hoy.format(soloMesFormato),
+    ano: hoy.format(soloAño),
+    fecha: hoy.format(soloNumero),
   });
   const [editState, setEditState] = useState(false);
   const [idUpdateScheme, setIdUpdateScheme] = useState("");
-
-  console.log({
-    dia: hoy.format(soloDia),
-    fecha: hoy.format(soloNumero),
-    mes: hoy.format(soloMesFormato),
-    año: hoy.format(soloAño),
-    fechaDefault: hoy.format("ll"),
-    fechaCalendar: hoy.format("L"),
-    fechaInfo: hoy.format(formatoDefault),
-  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -91,6 +83,9 @@ const FacturasTabla = ({
         tipos: "",
         categorias: "",
         idUser: pb?.authStore?.model?.id,
+        mes: hoy.format(soloMesFormato),
+        ano: hoy.format(soloAño),
+        fecha: hoy.format(soloNumero),
       });
     } else {
       console.log("LLenar campos");
@@ -104,6 +99,9 @@ const FacturasTabla = ({
       tipos: dato?.tipos,
       categorias: dato?.categorias,
       idUser: pb?.authStore?.model?.id,
+      mes: hoy.format(soloMesFormato),
+      ano: hoy.format(soloAño),
+      fecha: hoy.format(soloNumero),
     });
     setIdUpdateScheme(id);
   };
@@ -125,6 +123,9 @@ const FacturasTabla = ({
         tipos: "",
         categorias: "",
         idUser: pb?.authStore?.model?.id,
+        mes: hoy.format(soloMesFormato),
+        ano: hoy.format(soloAño),
+        fecha: hoy.format(soloNumero),
       });
     } else {
       console.log("LLenar campos");
@@ -466,6 +467,9 @@ const FacturasTabla = ({
                 <TableColumn>Presupuesto</TableColumn>
                 <TableColumn>Tipo</TableColumn>
                 <TableColumn>Categorias</TableColumn>
+                <TableColumn>Fecha</TableColumn>
+                <TableColumn>Mes</TableColumn>
+                <TableColumn>Año</TableColumn>
                 <TableColumn>Acciones</TableColumn>
               </TableHeader>
               <TableBody emptyContent={"No has añadido facturas."}>
@@ -483,6 +487,15 @@ const FacturasTabla = ({
                       </TableCell>
                       <TableCell className="text-green-500">
                         {returnCategorias(dato?.categorias)}
+                      </TableCell>
+                      <TableCell className="text-[#202b21]">
+                        {dato?.fecha}
+                      </TableCell>
+                      <TableCell className="text-[#202b21]">
+                        {dato?.mes}
+                      </TableCell>
+                      <TableCell className="text-[#202b21]">
+                        {dato?.ano}
                       </TableCell>
                       <TableCell className="text-[#202b21]">
                         <Dropdown placement="left">

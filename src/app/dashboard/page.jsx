@@ -207,7 +207,16 @@ const Dashboard = () => {
 
           <Ahorros userIsValid={userIsValid} totalAhorros={totalAhorros} />
 
-          <Graficos userIsValid={userIsValid} dataCategorias={dataCategorias} />
+          <Graficos
+            userIsValid={userIsValid}
+            dataCategorias={dataCategorias}
+            totalAhorros={totalAhorros}
+            totalFacturas={totalFacturas}
+            totalGastos={totalGastos}
+            tablaFacturas={tablaFacturas}
+            tablaGastos={tablaGastos}
+            tablaAhorros={tablaAhorros}
+          />
 
           <FacturasTabla
             userIsValid={userIsValid}

@@ -1,3 +1,4 @@
+import { pb } from "@/base/db/pocketbase";
 import { formatNumber } from "@/base/formatNumber";
 import {
   Button,
@@ -36,10 +37,12 @@ const PresupuestoPorAsignar = ({ presupuestoPorAsignar, userIsValid }) => {
   };
 
   useEffect(() => {
-    if (presupuestoPorAsignar <= 0) {
-      setModalPresupuesto(true);
-    } else {
-      setModalPresupuesto(false);
+    if (pb?.authStore?.isValid) {
+      if (presupuestoPorAsignar <= 0) {
+        setModalPresupuesto(true);
+      } else {
+        setModalPresupuesto(false);
+      }
     }
   }, [presupuestoPorAsignar]);
 

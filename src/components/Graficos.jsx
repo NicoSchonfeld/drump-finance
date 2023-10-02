@@ -1,52 +1,141 @@
 "use client";
 
-import { Skeleton } from "@nextui-org/react";
+import {
+  CircularProgress,
+  Progress,
+  Skeleton,
+  Tabs,
+  Tab,
+  Card,
+  CardBody,
+} from "@nextui-org/react";
 import CategoriasPie from "./Victory/CategoriasPie";
-import TiposChart from "./Victory/TiposChart";
+import React from "react";
 
-const Graficos = ({ userIsValid, dataCategorias }) => {
-  const renderChartCategorys = () => {
-    if (
-      dataCategorias?.necesidades == 0 &&
-      dataCategorias?.deseos == 0 &&
-      dataCategorias?.ahorros == 0
-    ) {
-      return (
-        <p className="h-40 w-auto px-5 flex items-center justify-center">
-          No hay categorias
-        </p>
-      );
-    } else {
-      return (
-        <CategoriasPie
-          n={dataCategorias?.necesidades}
-          d={dataCategorias?.deseos}
-          a={dataCategorias?.ahorros}
-        />
-      );
-    }
+const Graficos = ({
+  userIsValid,
+  dataCategorias,
+  totalAhorros,
+  totalFacturas,
+  totalGastos,
+  tablaFacturas,
+  tablaGastos,
+  tablaAhorros,
+}) => {
+  const sumaTotalDeLasTablas = totalAhorros + totalFacturas + totalGastos;
+
+  /* NECESIDADES */
+  const cantidadDeNecesidadesFacturas = tablaFacturas.filter(
+    (item) => item.categorias == 1
+  );
+
+  const cantidadDeNecesidadesGastos = tablaGastos.filter(
+    (item) => item.categorias == 1
+  );
+
+  const cantidadDeNecesidadesAhorros = tablaAhorros.filter(
+    (item) => item.categorias == 1
+  );
+
+  const totalDeNecesidadesEnFacturas = cantidadDeNecesidadesFacturas.reduce(
+    (acc, item) => (acc += item.presupuesto),
+    0
+  );
+
+  const totalDeNecesidadesEnGastos = cantidadDeNecesidadesGastos.reduce(
+    (acc, item) => (acc += item.presupuesto),
+    0
+  );
+
+  const totalDeNecesidadesEnAhorros = cantidadDeNecesidadesAhorros.reduce(
+    (acc, item) => (acc += item.presupuesto),
+    0
+  );
+
+  const sumaTotalDeNecesidades =
+    totalDeNecesidadesEnFacturas +
+    totalDeNecesidadesEnGastos +
+    totalDeNecesidadesEnAhorros;
+
+  /* GASTOS */
+  const cantidadDeDeseosFacturas = tablaFacturas.filter(
+    (item) => item.categorias == 2
+  );
+
+  const cantidadDeDeseosGastos = tablaGastos.filter(
+    (item) => item.categorias == 2
+  );
+
+  const cantidadDeDeseosAhorros = tablaAhorros.filter(
+    (item) => item.categorias == 2
+  );
+
+  const totalDeDeseosEnFacturas = cantidadDeDeseosFacturas.reduce(
+    (acc, item) => (acc += item.presupuesto),
+    0
+  );
+
+  const totalDeDeseosEnGastos = cantidadDeDeseosGastos.reduce(
+    (acc, item) => (acc += item.presupuesto),
+    0
+  );
+
+  const totalDeDeseosEnAhorros = cantidadDeDeseosAhorros.reduce(
+    (acc, item) => (acc += item.presupuesto),
+    0
+  );
+
+  const sumaTotalDeDeseos =
+    totalDeDeseosEnFacturas + totalDeDeseosEnGastos + totalDeDeseosEnAhorros;
+
+  /* AHORROS */
+  const cantidadDeAhorrosFacturas = tablaFacturas.filter(
+    (item) => item.categorias == 3
+  );
+
+  const cantidadDeAhorrosGastos = tablaGastos.filter(
+    (item) => item.categorias == 3
+  );
+
+  const cantidadDeAhorrosAhorros = tablaAhorros.filter(
+    (item) => item.categorias == 3
+  );
+
+  const totalDeAhorrosEnFacturas = cantidadDeAhorrosFacturas.reduce(
+    (acc, item) => (acc += item.presupuesto),
+    0
+  );
+
+  const totalDeAhorrosEnGastos = cantidadDeAhorrosGastos.reduce(
+    (acc, item) => (acc += item.presupuesto),
+    0
+  );
+
+  const totalDeAhorrosEnAhorros = cantidadDeAhorrosAhorros.reduce(
+    (acc, item) => (acc += item.presupuesto),
+    0
+  );
+
+  const sumaTotalDeAhorros =
+    totalDeAhorrosEnFacturas + totalDeAhorrosEnGastos + totalDeAhorrosEnAhorros;
+
+  const renderDataNecesidades = () => {
+    const porsentajeNecesidades =
+      (sumaTotalDeNecesidades / sumaTotalDeLasTablas) * 100;
+
+    return porsentajeNecesidades.toFixed(0);
   };
 
-  const renderChartTypes = () => {
-    if (
-      dataCategorias?.necesidades == 0 &&
-      dataCategorias?.deseos == 0 &&
-      dataCategorias?.ahorros == 0
-    ) {
-      return (
-        <p className="h-40 w-auto px-5 flex items-center justify-center">
-          No hay categorias
-        </p>
-      );
-    } else {
-      return (
-        <TiposChart
-          n={dataCategorias?.necesidades}
-          d={dataCategorias?.deseos}
-          a={dataCategorias?.ahorros}
-        />
-      );
-    }
+  const renderDataDeseos = () => {
+    const porsentajeDeseos = (sumaTotalDeDeseos / sumaTotalDeLasTablas) * 100;
+
+    return porsentajeDeseos.toFixed(0);
+  };
+
+  const renderDataAhorros = () => {
+    const porsentajeAhorros = (sumaTotalDeAhorros / sumaTotalDeLasTablas) * 100;
+
+    return porsentajeAhorros.toFixed(0);
   };
 
   return (
@@ -70,51 +159,57 @@ const Graficos = ({ userIsValid, dataCategorias }) => {
           className="rounded w-auto mt-5 bg-[#bfd1c0]"
           isLoaded={userIsValid}
         >
-          <div className="flex items-center justify-center flex-col md:flex-row">
-            <div className="flex items-center justify-center flex-col">
-              <>{renderChartCategorys()}</>
-
-              <span className="mb-2 text-[9px] md:text-sm">2023</span>
-
-              <div className="flex items-center flex-wrap justify-center gap-5">
-                <div className="flex items-center gap-2 text-[9px] md:text-sm">
-                  <div className="w-3 h-3 md:w-4 md:h-4 bg-yellow-300 rounded md:rounded-md"></div>{" "}
-                  <p>Necesidades</p>{" "}
-                  {/* <span>{dataCategorias?.necesidades}</span> */}
-                </div>
-
-                <div className="flex items-center gap-2 text-[9px] md:text-sm">
-                  <div className="w-3 h-3 md:w-4 md:h-4 bg-red-400 rounded md:rounded-md"></div>{" "}
-                  <p>Deseos</p> {/* <span>{dataCategorias?.deseos}</span> */}
-                </div>
-                <div className="flex items-center gap-2 text-[9px] md:text-sm">
-                  <div className="w-3 h-3 md:w-4 md:h-4 bg-green-400 rounded md:rounded-md"></div>{" "}
-                  <p>Ahorros</p> {/* <span>{dataCategorias?.ahorros}</span> */}
-                </div>
-              </div>
+          <div className="flex w-full py-20 items-center flex-wrap justify-center gap-5">
+            <div className="flex items-center flex-col gap-2 text-[9px] md:text-sm">
+              <CircularProgress
+                aria-label="Loading..."
+                size="lg"
+                value={renderDataNecesidades()}
+                color="warning"
+                showValueLabel={true}
+                classNames={{
+                  svg: "w-20 h-20 lg:w-40 lg:h-40 drop-shadow-md",
+                  indicator: "stroke-yellow-400",
+                  track: "stroke-black/10",
+                  value: "text-sm font-semibold text-black",
+                }}
+              />
+              <p>Necesidades</p>{" "}
+              {/* <span>{dataCategorias?.necesidades}</span> */}{" "}
             </div>
 
-            <div className="flex items-center justify-center flex-col">
-              <>{renderChartTypes()}</>
+            <div className="flex items-center flex-col gap-2 text-[9px] md:text-sm">
+              <CircularProgress
+                aria-label="Loading..."
+                size="lg"
+                value={renderDataDeseos()}
+                color="danger"
+                showValueLabel={true}
+                classNames={{
+                  svg: "w-20 h-20 lg:w-40 lg:h-40 drop-shadow-md",
+                  indicator: "stroke-red-400",
+                  track: "stroke-black/10",
+                  value: "text-sm font-semibold text-black",
+                }}
+              />
+              <p>Deseos</p> {/* <span>{dataCategorias?.deseos}</span> */}
+            </div>
 
-              <span className="mb-2 text-[9px] md:text-sm">2023</span>
-
-              <div className="flex items-center flex-wrap justify-center gap-5">
-                <div className="flex items-center gap-2 text-[9px] md:text-sm">
-                  <div className="w-3 h-3 md:w-4 md:h-4 bg-yellow-300 rounded md:rounded-md"></div>{" "}
-                  <p>Necesidades</p>{" "}
-                  {/* <span>{dataCategorias?.necesidades}</span> */}
-                </div>
-
-                <div className="flex items-center gap-2 text-[9px] md:text-sm">
-                  <div className="w-3 h-3 md:w-4 md:h-4 bg-red-400 rounded md:rounded-md"></div>{" "}
-                  <p>Deseos</p> {/* <span>{dataCategorias?.deseos}</span> */}
-                </div>
-                <div className="flex items-center gap-2 text-[9px] md:text-sm">
-                  <div className="w-3 h-3 md:w-4 md:h-4 bg-green-400 rounded md:rounded-md"></div>{" "}
-                  <p>Ahorros</p> {/* <span>{dataCategorias?.ahorros}</span> */}
-                </div>
-              </div>
+            <div className="flex items-center flex-col gap-2 text-[9px] md:text-sm">
+              <CircularProgress
+                aria-label="Loading..."
+                size="lg"
+                value={renderDataAhorros()}
+                color="success"
+                showValueLabel={true}
+                classNames={{
+                  svg: "w-20 h-20 lg:w-40 lg:h-40 drop-shadow-md",
+                  indicator: "stroke-green-400",
+                  track: "stroke-black/10",
+                  value: "text-sm font-semibold text-black",
+                }}
+              />
+              <p>Ahorros</p> {/* <span>{dataCategorias?.ahorros}</span> */}
             </div>
           </div>
         </Skeleton>
