@@ -69,7 +69,7 @@ const ViewRevenue = () => {
   };
 
   return (
-    <section className="w-full h-auto lg:h-screen bg-[#E5F1E8] py-10">
+    <section className="w-full h-screen bg-[#E5F1E8] py-10">
       <div className="container mx-auto w-full h-full px-5 py-20 flex items-center justify-center gap-5">
         <AnimatePresence>
           <div className="relative bg-white w-auto p-5 lg:p-20 flex items-start justify-center flex-col gap-10 rounded-md shadow-lg">
@@ -89,7 +89,7 @@ const ViewRevenue = () => {
               </Button>
             </Tooltip>
 
-            <div>
+            <div className="mt-10 lg:mt-0">
               <h3 className="text-3xl font-bold text-[#202b21] mb-2">
                 Tus ingreos
               </h3>

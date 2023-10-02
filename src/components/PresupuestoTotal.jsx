@@ -109,7 +109,7 @@ const PresupuestoTotal = ({
               </div>
             </Skeleton>
           </div>
-          <div className="mt-5 w-full flex flex-col lg:flex-row items-center gap-5">
+          <div className="mt-10 w-full flex flex-col items-center gap-5">
             <Skeleton
               className="rounded bg-[#bfd1c0] w-full"
               isLoaded={userIsValid}

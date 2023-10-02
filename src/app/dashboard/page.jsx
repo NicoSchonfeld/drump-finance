@@ -79,6 +79,12 @@ const Dashboard = () => {
   const categorias = [
     { id: 1, title: "Necesidades", value: 1 },
     { id: 2, title: "Deseos", value: 2 },
+    /* { id: 3, title: "Ahorros", value: 3 }, */
+  ];
+
+  const categoriasAhorros = [
+    { id: 1, title: "Necesidades", value: 1 },
+    { id: 2, title: "Deseos", value: 2 },
     { id: 3, title: "Ahorros", value: 3 },
   ];
 
@@ -238,7 +244,7 @@ const Dashboard = () => {
 
           <AhorrosTabla
             userIsValid={userIsValid}
-            categorias={categorias}
+            categorias={categoriasAhorros}
             tipos={tipos}
             tablaAhorros={tablaAhorros}
             totalAhorros={totalAhorros}

@@ -164,14 +164,18 @@ const Graficos = ({
               <CircularProgress
                 aria-label="Loading..."
                 size="lg"
-                value={renderDataNecesidades()}
+                value={
+                  renderDataNecesidades() === "NaN"
+                    ? 0
+                    : renderDataNecesidades()
+                }
                 color="warning"
                 showValueLabel={true}
                 classNames={{
                   svg: "w-20 h-20 lg:w-40 lg:h-40 drop-shadow-md",
                   indicator: "stroke-yellow-400",
                   track: "stroke-black/10",
-                  value: "text-sm font-semibold text-black",
+                  value: `text-sm lg:text-2xl font-semibold text-black`,
                 }}
               />
               <p>Necesidades</p>{" "}
@@ -182,14 +186,14 @@ const Graficos = ({
               <CircularProgress
                 aria-label="Loading..."
                 size="lg"
-                value={renderDataDeseos()}
+                value={renderDataDeseos() === "NaN" ? 0 : renderDataDeseos()}
                 color="danger"
                 showValueLabel={true}
                 classNames={{
                   svg: "w-20 h-20 lg:w-40 lg:h-40 drop-shadow-md",
                   indicator: "stroke-red-400",
                   track: "stroke-black/10",
-                  value: "text-sm font-semibold text-black",
+                  value: "text-sm lg:text-2xl font-semibold text-black",
                 }}
               />
               <p>Deseos</p> {/* <span>{dataCategorias?.deseos}</span> */}
@@ -199,14 +203,14 @@ const Graficos = ({
               <CircularProgress
                 aria-label="Loading..."
                 size="lg"
-                value={renderDataAhorros()}
+                value={renderDataAhorros() === "NaN" ? 0 : renderDataAhorros()}
                 color="success"
                 showValueLabel={true}
                 classNames={{
                   svg: "w-20 h-20 lg:w-40 lg:h-40 drop-shadow-md",
                   indicator: "stroke-green-400",
                   track: "stroke-black/10",
-                  value: "text-sm font-semibold text-black",
+                  value: "text-sm lg:text-2xl font-semibold text-black",
                 }}
               />
               <p>Ahorros</p> {/* <span>{dataCategorias?.ahorros}</span> */}
