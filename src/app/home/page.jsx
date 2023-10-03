@@ -8,6 +8,7 @@ import { motion, useScroll } from "framer-motion";
 import NextLink from "next/link";
 
 import ImageHome from "@/assets/imageHome.png";
+import { pb } from "@/base/db/pocketbase";
 
 const HomePage = () => {
   return (
@@ -60,7 +61,7 @@ const HomePage = () => {
               >
                 <Button
                   as={NextLink}
-                  href="/dashboard"
+                  href={pb?.authStore?.isValid ? "/dashboard" : "/auth/login"}
                   color="primary"
                   radius="sm"
                   className="font-medium"
